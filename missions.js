@@ -14,9 +14,7 @@
     return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   }
 
-  function fresh(){
-    return {date:dayKey(),completed:{},claimed:{}};
-  }
+  function fresh(){ return {date:dayKey(),completed:{},claimed:{}}; }
 
   function load(){
     try{
@@ -65,9 +63,7 @@
     refresh();
   }
 
-  function rewardText(r){
-    return '🪙 +'+r.coins+' · ⭐ +'+r.xp+' XP'+(r.gem?' · 💎 +'+r.gem:'');
-  }
+  function rewardText(r){ return '🪙 +'+r.coins+' · ⭐ +'+r.xp+' XP'+(r.gem?' · 💎 +'+r.gem:''); }
 
   function refresh(){
     ensureDay();
@@ -98,9 +94,9 @@
     if(!game) return [];
     const elapsed=(Date.now()-startedAt)/1000;
     const results=[];
-    if(!runUsedShuffle) results.push(MISSION_SET[0]);
-    if((Number(game.bestCombo)||0)>=5) results.push(MISSION_SET[1]);
-    if(elapsed<=90) results.push(MISSION_SET[2]);
+    if(!missionData.completed['no-shuffle'] && !runUsedShuffle) results.push(MISSION_SET[0]);
+    if(!missionData.completed['combo-5'] && (Number(game.bestCombo)||0)>=5) results.push(MISSION_SET[1]);
+    if(!missionData.completed['speed-90'] && elapsed<=90) results.push(MISSION_SET[2]);
     results.forEach(m=>missionData.completed[m.id]=true);
     let changed=false;
     results.forEach(m=>{ if(award(m)) changed=true; });
@@ -109,14 +105,10 @@
   }
 
   const originalNewGame=window.newGame;
-  if(typeof originalNewGame==='function'){
-    window.newGame=function(){ runUsedShuffle=false; return originalNewGame.apply(this,arguments); };
-  }
+  if(typeof originalNewGame==='function') window.newGame=function(){ runUsedShuffle=false; return originalNewGame.apply(this,arguments); };
 
   const originalShuffle=window.shuffle;
-  if(typeof originalShuffle==='function'){
-    window.shuffle=function(){ runUsedShuffle=true; return originalShuffle.apply(this,arguments); };
-  }
+  if(typeof originalShuffle==='function') window.shuffle=function(){ runUsedShuffle=true; return originalShuffle.apply(this,arguments); };
 
   const originalWin=window.win;
   if(typeof originalWin==='function'){
