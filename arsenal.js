@@ -8,7 +8,7 @@
   {level:5,icon:'💀',name:'Maître des Sept Mers'}
  ];
  const ITEMS=[
-  {id:'compass',icon:'🧭',name:'Boussole d'Azur',desc:'Réduit le coût d’un indice.',cost:3},
+  {id:'compass',icon:'🧭',name:'Boussole d’Azur',desc:'Réduit le coût d’un indice.',cost:3},
   {id:'map',icon:'🗺️',name:'Carte porte-bonheur',desc:'Protège une partie contre un mélange payant.',cost:3},
   {id:'crown',icon:'👑',name:'Couronne du Kraken',desc:'Titre prestigieux débloqué au niveau 5.',cost:0}
  ];
@@ -23,6 +23,7 @@
  }
  function refresh(){const grid=document.getElementById('arsenalGrid');if(!grid)return;const lvl=Number(state.level)||1;const title=data.title||TITLES[Math.min(4,lvl-1)];document.getElementById('titleText').textContent=title.icon+' Titre : '+title.name;grid.innerHTML=ITEMS.map(i=>{const owned=!!data.owned[i.id];const locked=i.id==='crown'&&lvl<5;return `<article class="gear ${locked?'locked':''}"><span class="gear-icon">${i.icon}</span><strong>${i.name}</strong><small>${i.desc}</small>${locked?'<span class="owned">🔒 Niveau 5</span>':owned?'<span class="owned">✓ Possédé</span>':i.cost?`<button data-buy="${i.id}">Acheter · ${i.cost} 💎</button>`:'<span class="owned">✓ Débloqué</span>'}</article>`}).join('');grid.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buy(b.dataset.buy));}
  function buy(id){const item=ITEMS.find(x=>x.id===id);if(!item||data.owned[id])return;if((Number(state.gems)||0)<item.cost){alert('💎 Pas assez de gemmes pour cet équipement.');return}state.gems-=item.cost;data.owned[id]=true;saveA();if(typeof save==='function')save();refresh();if(typeof sfx==='function')sfx(true);}
- function init(){inject();}
+ function loadMobile(){if(document.querySelector('script[data-mobile-adapt]'))return;const s=document.createElement('script');s.src='mobile.js?v=20260907-1';s.defer=false;s.dataset.mobileAdapt='1';document.head.appendChild(s)}
+ function init(){inject();loadMobile();}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
