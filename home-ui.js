@@ -56,16 +56,11 @@
         btn.classList.add('active');
         if(label.includes('accueil'))showHome();
         else if(label.includes('mode'))showHome();
-        else if(label.includes('défi')){
-          showHome();
-          document.getElementById('dailyPlay')?.focus();
-        }else if(label.includes('collection')){
-          const c=document.querySelector('.captain-card');
-          c?.scrollIntoView({behavior:'smooth',block:'center'});
-        }else if(label.includes('boutique')){
+        else if(label.includes('défi')){showHome();document.getElementById('dailyPlay')?.focus();}
+        else if(label.includes('collection'))document.querySelector('.captain-card')?.scrollIntoView({behavior:'smooth',block:'center'});
+        else if(label.includes('boutique')){
           const chest=document.querySelector('[data-chest],#chestButton,.chest-btn');
-          if(chest)chest.click();
-          else document.getElementById('captainCard')?.scrollIntoView({behavior:'smooth',block:'center'});
+          if(chest)chest.click(); else document.getElementById('captainCard')?.scrollIntoView({behavior:'smooth',block:'center'});
         }
       });
     });
@@ -86,14 +81,16 @@
       .game-panel{position:relative;overflow:hidden}
       .game-panel:before{content:'⚓';position:absolute;right:18px;top:8px;font-size:5rem;opacity:.035;pointer-events:none;transform:rotate(12deg)}
       .game-head,.level-targets,.hud,.actions,.message,.board,.boosters{position:relative;z-index:2}
-      .board{border-width:5px!important;border-color:#a96b2c!important;border-radius:26px!important;background:radial-gradient(circle at 50% 48%,#2a9493 0,#11737e 43%,#075363 72%,#043746 100%),repeating-linear-gradient(168deg,transparent 0 24px,#ffffff08 25px 26px)!important;box-shadow:inset 0 0 0 2px #e0b75a55,inset 0 0 28px #001f2b,inset 0 -18px 28px #00192388,0 7px 0 #4a2513,0 14px 26px #00131dcc!important}
+      .board{border-width:5px!important;border-color:#b87532!important;border-radius:26px!important;background:radial-gradient(ellipse at 50% 40%,#319da0 0,#177b86 38%,#0b5d6e 67%,#043746 100%),repeating-linear-gradient(168deg,transparent 0 24px,#ffffff09 25px 26px)!important;box-shadow:inset 0 0 0 2px #f0c86b77,inset 0 0 0 6px #4d281644,inset 0 0 34px #001b27,inset 0 -24px 35px #00192399,0 7px 0 #4a2513,0 14px 26px #00131dcc!important;isolation:isolate}
+      .board:before{content:'⚓';position:absolute;z-index:1;left:10px;top:8px;font-size:1.6rem;color:#f1ca70;opacity:.3;transform:rotate(-18deg);pointer-events:none;text-shadow:2px 3px 3px #00151c}
+      .board:after{content:'☠  CAP SUR LE TRÉSOR  ☠';position:absolute;z-index:1;left:50%;bottom:7px;transform:translateX(-50%);padding:3px 10px;border:1px solid #d6a34866;border-radius:10px;background:#321a0c66;color:#f4d57e;font:700 .5rem Georgia,serif;letter-spacing:.14em;white-space:nowrap;pointer-events:none}
       .board .tile{border-width:2px!important;border-radius:9px!important;background:linear-gradient(145deg,#fffdf0 0,#f7e7bb 45%,#e5c982 100%)!important;letter-spacing:0;line-height:1;text-shadow:0 1px 0 #ffffff99;box-shadow:inset 2px 2px 0 #fffdf2,inset -2px -3px 0 #8c6b3f,2px 3px 0 #51351d,0 5px 9px #00151aaa!important;transition:transform .14s ease,filter .14s ease,box-shadow .14s ease,border-color .14s ease!important}
       .board .tile:before{content:'';position:absolute;inset:3px;border:1px solid #c79a4f88;border-radius:5px;pointer-events:none}
       .board .tile:after{content:'';position:absolute;left:5px;right:5px;bottom:-4px;height:5px;border-radius:0 0 5px 5px;background:#9b6a2d;pointer-events:none}
-      .board .tile.free{cursor:pointer}
-      .board .tile.free:hover{transform:translate(-2px,-5px) scale(1.035)!important;filter:brightness(1.08) saturate(1.05);box-shadow:inset 2px 2px 0 #fff,inset -2px -3px 0 #8c6b3f,4px 7px 0 #51351d,0 12px 18px #00151acc!important}
+      .board .tile.free{cursor:pointer}.board .tile.free:hover{transform:translate(-2px,-5px) scale(1.035)!important;filter:brightness(1.08) saturate(1.05);box-shadow:inset 2px 2px 0 #fff,inset -2px -3px 0 #8c6b3f,4px 7px 0 #51351d,0 12px 18px #00151acc!important}
       .board .tile.blocked{filter:brightness(.58) saturate(.72)!important}
       .board .tile.selected{outline:3px solid #ffe07a;outline-offset:2px;box-shadow:inset 2px 2px 0 #fff,inset -2px -3px 0 #8c6b3f,4px 7px 0 #51351d,0 0 20px #ffd95d!important;z-index:99!important;animation:pirateBoardSelect .55s ease-in-out infinite alternate!important}
+      .board .tile[data-layer="1"]{box-shadow:inset 2px 2px 0 #fffdf2,inset -2px -3px 0 #8c6b3f,3px 4px 0 #51351d,0 6px 10px #00151acc!important}
       .board .tile[data-layer="2"]{box-shadow:inset 2px 2px 0 #fffdf2,inset -2px -3px 0 #82633b,3px 4px 0 #4d311b,0 7px 11px #00151acc!important}
       .board .tile[data-layer="3"]{box-shadow:inset 2px 2px 0 #fffdf2,inset -2px -3px 0 #765832,4px 5px 0 #472c18,0 9px 13px #00151add!important}
       .board .tile[data-layer="4"],.board .tile[data-layer="5"]{box-shadow:inset 2px 2px 0 #fffdf2,inset -2px -3px 0 #6b4f2e,5px 6px 0 #402716,0 11px 15px #00151dee!important}
@@ -102,15 +99,22 @@
       .board-corner.tl{left:-7px;top:-9px}.board-corner.tr{right:-7px;top:-9px;transform:scaleX(-1)}.board-corner.bl{left:-7px;bottom:-9px;transform:scaleY(-1)}.board-corner.br{right:-7px;bottom:-9px;transform:scale(-1)}
       .board-ribbon{position:absolute;left:50%;top:-15px;transform:translateX(-50%);z-index:105;padding:3px 12px;border:2px solid #d6a348;border-radius:12px;background:linear-gradient(#7d4720,#4a2412);color:#ffe9a7;font:800 .62rem Georgia,serif;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 3px 0 #2b1208,0 5px 10px #00131c66;pointer-events:none;white-space:nowrap}
       .boosters{margin-top:12px;padding-top:10px;position:relative}.boosters:before{content:'☠  OUTILS DU CAPITAINE  ☠';position:absolute;top:-3px;left:50%;transform:translateX(-50%);font-size:.55rem;letter-spacing:.13em;color:#d7b15c;white-space:nowrap;opacity:.78}
-      @media(max-width:600px){.board{width:342px!important;height:588px!important;border-radius:22px!important}.board .tile{width:52px!important;height:62px!important;font-size:1.55rem!important}.boosters:before{font-size:.48rem}}
+      @media(max-width:600px){.board{width:342px!important;height:588px!important;border-radius:22px!important}.board .tile{width:52px!important;height:62px!important;font-size:1.55rem!important}.boosters:before{font-size:.48rem}.board:after{font-size:.42rem}}
       @media(prefers-reduced-motion:reduce){.board .tile.selected{animation:none!important}}
       `;
       document.head.appendChild(boardStyle);
     }
     const board=document.getElementById('board');
-    if(board&&!board.querySelector('.board-ribbon')){
-      ['tl','tr','bl','br'].forEach(pos=>{const e=document.createElement('span');e.className='board-corner '+pos;e.textContent='⚓';board.appendChild(e)});
-      const ribbon=document.createElement('span');ribbon.className='board-ribbon';ribbon.textContent='⚓ Plateau pirate';board.appendChild(ribbon);
+    if(board&&!board.dataset.decorWatcher){
+      board.dataset.decorWatcher='1';
+      const addDecor=()=>{
+        if(!board.querySelector('.board-ribbon')){
+          ['tl','tr','bl','br'].forEach(pos=>{const e=document.createElement('span');e.className='board-corner '+pos;e.textContent='⚓';board.appendChild(e)});
+          const ribbon=document.createElement('span');ribbon.className='board-ribbon';ribbon.textContent='⚓ Plateau pirate';board.appendChild(ribbon);
+        }
+      };
+      addDecor();
+      new MutationObserver(addDecor).observe(board,{childList:true});
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
