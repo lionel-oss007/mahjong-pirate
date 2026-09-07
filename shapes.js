@@ -1,0 +1,109 @@
+/* Formes de plateaux Mahjong Pirates — positions réelles, compatibles avec freeTile(). */
+(function(){
+  const SX=44,SY=50,W=52,H=62;
+  const boardW=6*SX+W+18, boardH=10*SY+H+18;
+
+  const masks={
+    tortue:[
+      ['001100'],
+      ['111111','111111','111111','011110'],
+    ],
+    pyramide:[
+      ['001100','011110','111111','111111','111111','111111'],
+    ],
+    diamant:[
+      ['001100','011110','111111','111111','111111','111111','011110','001100'],
+    ],
+    navire:[
+      ['001100','011110','111111','111111','111111','111111','111111','111111'],
+    ],
+    fort:[
+      ['011110','111111','111111','111111','111111','111111','111111','111111'],
+    ],
+    archipel:[
+      ['110011','110011','001100','111111','001100','110011','110011','000000'],
+    ]
+  };
+
+  const layerCounts={
+    tortue:[24,12,8,4,0],
+    pyramide:[30,16,8,6,0],
+    diamant:[36,20,10,6,0],
+    navire:[42,24,12,6,0],
+    fort:[48,26,14,8,0],
+    archipel:[54,30,16,8,0]
+  };
+
+  function keyFor(level){
+    if(level===1)return 'tortue';
+    if(level===2)return 'pyramide';
+    if(level===3)return 'diamant';
+    if(level===4)return 'navire';
+    if(level===5)return 'fort';
+    return 'archipel';
+  }
+
+  function gridForShape(name, layer, wanted){
+    let rows,cols=6;
+    if(name==='tortue'){
+      if(layer===0) rows=['001100','111111','111111','111111','011110'];
+      else if(layer===1) rows=['0110','1111','1111'];
+      else if(layer===2) rows=['0110','1111'];
+      else rows=['11','11'];
+      cols=rows[0].length;
+    } else if(name==='pyramide'){
+      if(layer===0) rows=['001100','011110','111111','111111','111111','111111'];
+      else if(layer===1) rows=['01110','11111','11111','11111'];
+      else if(layer===2) rows=['0110','1111'];
+      else rows=['111','111'];
+      cols=rows[0].length;
+    } else if(name==='diamant'){
+      if(layer===0) rows=['001100','011110','111111','111111','111111','111111','011110','001100'];
+      else if(layer===1) rows=['00100','01110','11111','11111','01110'];
+      else if(layer===2) rows=['0110','1111','1111'];
+      else rows=['111','111'];
+      cols=rows[0].length;
+    } else if(name==='navire'){
+      if(layer===0) rows=['001100','011110','111111','111111','111111','111111','111111','111111'];
+      else if(layer===1) rows=['011110','011110','111111','011110'];
+      else if(layer===2) rows=['0110','1111','1111'];
+      else rows=['111','111'];
+      cols=rows[0].length;
+    } else if(name==='fort'){
+      if(layer===0) rows=['011110','111111','111111','111111','111111','111111','111111','111111'];
+      else if(layer===1) rows=['11011','11111','11111','11011','11011'];
+      else if(layer===2) rows=['11011','11111','11111'];
+      else rows=['1111','1111'];
+      cols=rows[0].length;
+    } else {
+      if(layer===0) rows=['110011','110011','001100','111111','001100','110011','110011'];
+      else if(layer===1) rows=['11011','11111','00100','11111'];
+      else if(layer===2) rows=['0110','1111','0110'];
+      else rows=['11','11','11','11'];
+      cols=rows[0].length;
+    }
+    const cells=[];
+    rows.forEach((row,r)=>[...row].forEach((v,c)=>{if(v==='1')cells.push({r,c})}));
+    if(cells.length>wanted){
+      const cr=(rows.length-1)/2,cc=(cols-1)/2;
+      cells.sort((a,b)=>((a.r-cr)**2+(a.c-cc)**2)-((b.r-cr)**2+(b.c-cc)**2));
+      cells.length=wanted;
+    }
+    return {rows,cells,cols};
+  }
+
+  window.layout=function(level){
+    const name=keyFor(level), targets=layerCounts[name]||layerCounts.archipel;
+    const out=[];
+    targets.forEach((wanted,l)=>{
+      if(!wanted)return;
+      const g=gridForShape(name,l,wanted);
+      const sw=(g.cols-1)*SX+W, sh=(g.rows.length-1)*SY+H;
+      const ox=(boardW-sw)/2+l*2, oy=(boardH-sh)/2+l*2;
+      g.cells.forEach(p=>out.push({x:ox+p.c*SX,y:oy+p.r*SY,l}));
+    });
+    return out.map((p,i)=>({...p,id:i}));
+  };
+
+  window.__mahjongPirateShapes={version:'2.0',keyFor};
+})();
