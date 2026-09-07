@@ -27,9 +27,10 @@ jobs:
           if 'tile-art.css?v=20260907-1' not in s:
               marker='</head>'
               s=s.replace(marker, '<link rel="stylesheet" href="tile-art.css?v=20260907-1">\n'+marker, 1)
-          if 'shapes.js?v=20260907-1' not in s:
-              marker='<script src="app.js?v=20260907-7"></script>'
-              s=s.replace(marker, marker+'\n<script src="shapes.js?v=20260907-1"></script>', 1)
+          marker='<script src="app.js?v=20260907-7"></script>'
+          import re
+          s=re.sub(r'<script src="shapes\.js\?v=[^"]+"></script>\s*', '', s)
+          s=s.replace(marker, marker+'\n<script src="shapes.js?v=20260908-1"></script>', 1)
           p.write_text(s, encoding='utf-8')
           PY
       - uses: actions/configure-pages@v5
