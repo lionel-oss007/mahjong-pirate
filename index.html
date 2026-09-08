@@ -6,48 +6,177 @@
 <meta name="theme-color" content="#0a5060">
 <title>Mahjong Pirate</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="styles.css?v=20260907-6">
+<!-- Feuilles de style optimisées -->
+<link rel="stylesheet" href="styles.css?v=20260908-1">
+<link rel="stylesheet" href="tile-art.css?v=20260908-1">
+<link rel="stylesheet" href="animations.css?v=20260908-1">
+<link rel="stylesheet" href="notifications.css?v=20260908-1">
 <style>
 :root{--wood:#5b2d13;--wood2:#8d5427;--gold:#f4c95d;--paper:#f6dda4;--paper2:#fff0c7;--ink:#43200f;--sea:#087084;--green:#18b950;--blue:#129bd0;--red:#e73435}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Georgia,'Times New Roman',serif;color:var(--ink)}body{background:linear-gradient(#1591a4 0 38%,#075b6c 65%,#073e50 100%);overflow-x:hidden}body:before{content:'';position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 18% 12%,#fff8 0 2%,transparent 24%),radial-gradient(circle at 80% 5%,#8fe8ed 0,transparent 28%),linear-gradient(115deg,transparent 0 35%,#00384722 36% 37%,transparent 38% 100%);pointer-events:none}
-.topbar{height:78px;margin:0;padding:8px 22px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(#9b5d2b,#5c2d13 55%,#32170b);border-bottom:4px solid var(--gold);box-shadow:0 5px 16px #0008;position:relative;z-index:5}.topbar:before{content:'';position:absolute;inset:5px;border-top:1px solid #ffe29a55;border-bottom:1px solid #16090355;pointer-events:none}.brand{font-weight:900;font-size:1.7rem;color:#fff0bd;text-shadow:2px 3px 0 #2c1007}.wallet{display:flex;gap:10px}.wallet span{min-width:105px;padding:7px 13px;text-align:center;border:2px solid #dca84b;border-radius:13px;background:#32170dcc;color:#ffe7a3;font-size:1.05rem;box-shadow:inset 0 1px #fff4,0 3px 0 #241006}.wallet b{color:#fff}
-.shell{max-width:1320px;margin:auto;padding:18px 18px 30px}.captain-card{display:flex;align-items:center;justify-content:space-between;max-width:390px;padding:10px 15px;margin:0 0 12px;border:3px solid #b8782c;border-radius:17px;background:linear-gradient(145deg,#fff0bd,#e5bd72);box-shadow:inset 0 0 0 2px #fff5c788,0 9px 22px #001c2a99}.captain-card .eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:#70401c}.captain-card h1{font-size:1.1rem;margin:1px 0 3px}.statsline{display:flex;gap:10px;font-size:.72rem;color:#70451f}.ghost{border:2px solid #d3a044;border-radius:10px;background:linear-gradient(#89542a,#4a2411);color:#ffe9b0;padding:7px 10px;font-weight:900;box-shadow:0 3px 0 #291007;cursor:pointer}
-#home{position:relative}.home-scene{min-height:650px;position:relative;padding:10px 18px 22px;background:radial-gradient(ellipse at 50% 30%,#56c8d0aa,transparent 46%),linear-gradient(180deg,#10849a,#0b6879 62%,#075466);border:3px solid #a86c2b;border-radius:26px;box-shadow:inset 0 0 0 2px #fff4b033,inset 0 -30px 50px #002d3c66,0 16px 35px #00192399;overflow:hidden}.home-scene:before{content:'☁️   ☁️';position:absolute;top:20px;left:8%;font-size:3rem;opacity:.25;letter-spacing:8rem;white-space:nowrap}.home-scene:after{content:'🌴   🏴‍☠️   🌴';position:absolute;left:0;right:0;bottom:0;height:105px;padding-top:18px;text-align:center;font-size:4rem;background:linear-gradient(transparent,#063d4ddd);filter:drop-shadow(0 -3px 5px #001a24)}
-.logo{position:relative;z-index:2;width:min(610px,92%);margin:5px auto 16px;text-align:center;padding:10px 20px 14px;border:5px solid #7a451e;border-radius:20px;background:linear-gradient(145deg,#9b602e,#4c2411);box-shadow:inset 0 0 0 2px #e9bd5d66,0 8px 0 #32170c,0 13px 25px #001b2588;transform:rotate(-1deg)}.logo .wheel{font-size:2.2rem}.logo h2{margin:0;color:#fff1b8;font-size:clamp(2.3rem,6vw,4.4rem);letter-spacing:.03em;text-shadow:3px 4px 0 #3a1509,0 0 10px #ffdc6655}.logo strong{display:inline-block;margin-top:2px;padding:4px 35px;background:#e4bd73;border:2px solid #704018;border-radius:7px;color:#6a2e13;font-size:clamp(1rem,2.5vw,1.55rem);letter-spacing:.18em;box-shadow:0 3px 0 #3a190a}
-.home-layout{position:relative;z-index:3;display:grid;grid-template-columns:150px 1fr 245px;gap:15px;align-items:start}.side-menu{display:flex;flex-direction:column;gap:9px}.side-btn,.bottom-btn{border:3px solid #b9782e;border-radius:15px;background:linear-gradient(#8c552a,#4b2412);color:#ffe9b0;padding:12px 8px;font-weight:900;font-size:.85rem;text-shadow:1px 2px #2c1008;box-shadow:inset 0 1px #fff4,0 5px 0 #2b1108,0 9px 14px #00192377;cursor:pointer}.side-btn span{display:block;font-size:1.55rem;margin-bottom:2px}.side-btn.active,.side-btn:hover{background:linear-gradient(#d18b36,#754018);color:#fff4c7;transform:translateY(-1px)}.home-main{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.mode-card{min-height:335px;padding:10px 10px 14px;text-align:center;border:3px solid #b97930;border-radius:18px;background:linear-gradient(145deg,#fff1c2,#f1d08e 70%,#dcae60);box-shadow:inset 0 0 0 2px #fff7d899,0 7px 0 #744018,0 14px 23px #001a2488;display:flex;flex-direction:column}.mode-card h3{font-size:1.45rem;margin:3px 0 8px;color:#3d1b0b;text-shadow:1px 1px #fff7}.mode-art{height:170px;border-radius:13px;border:2px solid #86511f;background:radial-gradient(circle at 50% 25%,#6dd8dc,#14869a 58%,#075467);display:grid;place-items:center;font-size:4.7rem;box-shadow:inset 0 0 25px #00374499,0 4px 0 #704018;overflow:hidden}.mode-card p{font-family:Arial,sans-serif;font-size:.83rem;line-height:1.25;margin:9px 4px 11px;min-height:42px}.play{margin-top:auto;border:3px solid #b76c20;border-radius:13px;padding:10px;font-size:1rem;font-weight:900;color:#fff7d6;text-shadow:1px 2px #4a1b0b;box-shadow:inset 0 1px #fff6,0 4px 0 #57220e;cursor:pointer}.play.green{background:linear-gradient(#31d963,#078a3e)}.play.blue{background:linear-gradient(#25b9ec,#0878ae)}.play.red{background:linear-gradient(#f14c4a,#b51e25)}.play:active{transform:translateY(3px);box-shadow:0 1px 0 #57220e}
-.right-rail{display:flex;flex-direction:column;gap:12px}.promo{padding:12px;border:3px solid #b97930;border-radius:17px;background:linear-gradient(145deg,#fff1bf,#edc97f);box-shadow:inset 0 0 0 2px #fff8d588,0 6px 0 #744018,0 12px 20px #001a2488;text-align:center}.promo h3{margin:0 0 6px;font-size:1.25rem}.promo-art{height:105px;border-radius:11px;display:grid;place-items:center;font-size:3.5rem;background:linear-gradient(135deg,#1c94a2,#07596d);border:2px solid #86511f}.promo p{font-family:Arial,sans-serif;font-size:.75rem;line-height:1.25;margin:7px}.daily{background:linear-gradient(145deg,#fff0bb,#efc97a)}.event{background:linear-gradient(145deg,#f5d795,#d9aa62)}
-.home-bottom{position:relative;z-index:4;display:flex;justify-content:center;gap:12px;margin-top:15px}.bottom-btn{min-width:130px;padding:9px 14px}.hidden{display:none!important}
-/* carte aventure */#map{margin-top:10px}.map-panel{padding:18px;border:3px solid #b9782d;border-radius:20px;background:linear-gradient(145deg,#fff0bf,#e4b86d);box-shadow:0 14px 30px #001b2899}.map-banner{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border:3px solid #d1a04b;border-radius:15px;background:linear-gradient(145deg,#7d471f,#43200f);color:#fff0bd}.map-banner h2{margin:2px 0}.map-banner p{margin:0;color:#f4d9a3}.compass{width:65px;height:65px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#c68b35,#4d2512);border:3px solid #e1b65d;color:#ffe49b;font-size:1.5rem}.section-title{display:flex;justify-content:space-between;margin:13px 2px 7px;font-weight:900}.map-sea{position:relative;padding:15px;border:3px solid #9d672c;border-radius:15px;background:radial-gradient(circle at 20% 15%,#34aeb4,#087084 45%,#06475b);overflow:hidden}.route{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;position:relative}.island{min-height:135px;border:3px solid #b87931;border-radius:15px;background:linear-gradient(145deg,#fff0bc,#e8bf72);color:#4a2614;box-shadow:0 5px 0 #704018,0 9px 14px #001b2466;cursor:pointer;padding:9px}.island span{display:block;font-size:2rem}.island strong{display:block}.island small,.island em{display:block;font-size:.7rem}.island.locked{filter:grayscale(.8);opacity:.55}.island.current{box-shadow:0 0 0 4px #f7d46b,0 5px 0 #704018}.map-legend{display:flex;gap:18px;justify-content:center;padding:10px;font-size:.75rem}
-/* jeu */.game-panel{padding:16px;border:3px solid #b9782d;border-radius:20px;background:linear-gradient(#083f50,#052f3d);color:#fff0bd;box-shadow:0 14px 30px #00121dcc}.game-head{display:flex;justify-content:space-between;align-items:center}.game-head h2{margin:2px 0;color:#fff0bd}.game-head .eyebrow{color:#e4bf6b}.badge{display:inline-block;padding:3px 8px;border-radius:8px;background:#b8792d;color:#32170b;font-weight:900}.level-targets{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:560px;margin:12px auto}.level-targets>div:not(.target-line){position:relative;z-index:2;text-align:center;background:#4d2815;border:2px solid #b77b32;border-radius:10px;padding:6px;color:#f7d77d}.level-targets b{display:block}.target-line{position:absolute;left:6%;right:6%;top:50%;height:7px;background:#28130b;border:1px solid #a86d2b;border-radius:10px;z-index:1}.target-line i{display:block;height:100%;width:0;background:#f3c44f}.hud{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;max-width:600px;margin:10px auto}.hud div{text-align:center;padding:7px;background:#5e3017;border:2px solid #bd8033;border-radius:9px}.hud small{display:block;color:#e2c58e;font-size:.65rem}.hud b{font-size:.9rem}.actions{display:flex;justify-content:center;gap:8px}.actions button{border:2px solid #b06b22;border-radius:10px;padding:8px 12px;color:#fff7d6;font-weight:900;background:#168f4a}.actions button:nth-child(2){background:#087fae}.actions button:nth-child(3){background:#b9272b}.selection-wrap{display:none}.board{width:342px!important;height:588px!important;max-width:100%;margin:10px auto!important;position:relative;overflow:hidden;border:4px solid #8d5429!important;border-radius:17px!important;background:radial-gradient(circle at 50% 20%,#258d8e,#0b5d6b 55%,#063e50)!important;box-shadow:inset 0 0 40px #012934,0 9px 0 #5b3017!important}.board .tile{width:52px;height:62px;font-size:1.55rem;border-radius:10px}.boosters{display:flex;justify-content:center;gap:13px}.boosters button{width:70px;height:70px;border-radius:50%;border:3px solid #d5a344;background:radial-gradient(circle,#8c582c,#42200f);color:#ffe3a3;box-shadow:0 5px 0 #281107;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}.boosters button span{font-size:1.5rem}.boosters button small{font-size:.55rem}.boosters button b{position:absolute;right:-3px;top:-3px;background:#d34a28;border-radius:12px;padding:2px 6px}.message{text-align:center;min-height:20px;color:#f3d795}
-.deadlock-modal,.lose-modal,.win-modal{border:3px solid #d4a34c;border-radius:20px;background:radial-gradient(circle at 50% 0,#176174,#073b4c 75%);color:#fff;text-align:center;padding:25px;max-width:420px;box-shadow:0 20px 60px #000b}.deadlock-modal::backdrop,.lose-modal::backdrop,.win-modal::backdrop{background:#00151dcc}.modal-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}.modal-actions button{border:2px solid #c58b38;border-radius:10px;padding:9px 14px;background:#14934c;color:#fff;font-weight:900}.modal-actions button:nth-child(2){background:#147fa9}
-@media(max-width:950px){.home-layout{grid-template-columns:95px 1fr}.right-rail{display:none}.side-btn{font-size:.72rem}.home-main{grid-template-columns:1fr 1fr}.mode-card:last-child{grid-column:1/-1;max-width:360px;margin:auto;width:100%}}
-@media(max-width:600px){.topbar{height:56px;padding:5px 8px}.brand{font-size:1rem}.wallet span{min-width:auto;padding:5px 8px;font-size:.75rem}.shell{padding:7px 5px 18px}.captain-card{max-width:none;padding:8px 10px}.captain-card .ghost{display:none}.home-scene{min-height:620px;padding:5px 6px 15px;border-radius:17px}.logo{margin:0 auto 9px;padding:6px 8px 9px}.logo h2{font-size:2.05rem}.logo strong{padding:3px 18px;font-size:.75rem}.logo .wheel{font-size:1.4rem}.home-layout{grid-template-columns:58px 1fr;gap:6px}.side-menu{gap:6px}.side-btn{padding:8px 2px;font-size:.57rem;border-width:2px;border-radius:10px}.side-btn span{font-size:1.25rem}.home-main{grid-template-columns:1fr 1fr;gap:7px}.mode-card{min-height:245px;padding:6px 5px 8px;border-width:2px;border-radius:12px}.mode-card h3{font-size:.95rem;margin:2px 0 5px}.mode-art{height:105px;font-size:3rem}.mode-card p{font-size:.62rem;margin:5px 2px;min-height:34px}.play{padding:7px 4px;font-size:.7rem;border-width:2px;border-radius:9px}.mode-card:last-child{grid-column:auto;max-width:none}.home-bottom{gap:5px;margin-top:8px}.bottom-btn{min-width:0;flex:1;padding:7px 3px;font-size:.62rem;border-width:2px}.home-scene:after{font-size:2.4rem;height:55px}.map-panel,.game-panel{padding:8px;border-radius:14px}.route{grid-template-columns:1fr 1fr;gap:7px}.island{min-height:105px;padding:6px;font-size:.7rem}.island span{font-size:1.4rem}.map-banner{padding:9px}.map-banner h2{font-size:1rem}.map-banner p{font-size:.65rem}.compass{width:45px;height:45px}.board{width:342px!important;height:588px!important;max-width:calc(100vw - 18px)!important}.boosters{gap:7px}.boosters button{width:62px;height:62px}.hud{gap:3px}.hud div{padding:4px 1px}.hud small{font-size:.48rem}.hud b{font-size:.7rem}}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Georgia,'Times New Roman',serif;color:var(--ink)}body{background:linear-gradient(#1591a4 0 38%,#075b6c 65%,#073e50 100%);overflow-x:hidden}.topbar{height:78px;margin:0;padding:8px 22px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(#9b5d2b,#5c2d13 55%,#32170b);border-bottom:4px solid var(--gold)}.shell{max-width:1320px;margin:auto;padding:18px 18px 30px}.captain-card{display:flex;align-items:center;justify-content:space-between;max-width:390px;padding:10px 15px;margin:0 0 12px;border:3px solid #b9782d;border-radius:16px;background:linear-gradient(145deg,#fff0bf,#edc97f);box-shadow:0 6px 20px rgba(0,27,40,.3);color:#5b3d1c}#home{position:relative}.home-scene{min-height:650px;position:relative;padding:10px 18px 22px;background:radial-gradient(ellipse at 50% 30%,#56c8d0aa,transparent 46%),linear-gradient(180deg,#10849600 0,#108496 38%,#0b4f66 70%,#073e50 100%)}.logo{position:relative;z-index:2;width:min(610px,92%);margin:5px auto 16px;text-align:center;padding:10px 20px 14px;border:5px solid #7a451e;border-radius:20px;background:linear-gradient(145deg,#fff0bf,#ead9a0);box-shadow:0 8px 20px rgba(0,0,0,.3);color:#5b3d1c}.home-layout{position:relative;z-index:3;display:grid;grid-template-columns:150px 1fr 245px;gap:15px;align-items:start}.side-menu{display:flex;flex-direction:column;gap:9px}.side-btn,.bottom-btn{border:3px solid #b9782d;border-radius:12px;background:linear-gradient(145deg,#fff0bf,#ead9a0);cursor:pointer;font-weight:bold;color:#5b3d1c;padding:10px 14px;font-size:.95rem;transition:all .2s ease}.side-btn:hover,.side-btn.active{background:linear-gradient(145deg,#fef5d4,#f5e4b8);border-color:#d4a54c;box-shadow:0 4px 12px rgba(212,165,76,.3)}.right-rail{display:flex;flex-direction:column;gap:12px}.promo{padding:12px;border:3px solid #b97930;border-radius:17px;background:linear-gradient(145deg,#fff1bf,#edc97f);box-shadow:inset 0 0 0 2px rgba(255,255,255,.4),0 6px 16px rgba(0,27,40,.25);color:#5b3d1c;text-align:center}.home-bottom{position:relative;z-index:4;display:flex;justify-content:center;gap:12px;margin-top:15px}.bottom-btn{min-width:130px;padding:9px 14px}.hidden{display:none!important}#map{margin-top:10px}.map-panel{padding:18px;border:3px solid #b9782d;border-radius:20px;background:linear-gradient(145deg,#fff0bf,#e4b86d);box-shadow:0 14px 30px rgba(0,27,40,.3)}.map-banner{margin-bottom:16px}.map-banner h2{color:#8a5a1e}.map-banner p{color:#5b3d1c;line-height:1.4}#game{margin-top:10px}.game-panel{padding:16px;border:3px solid #b9782d;border-radius:20px;background:linear-gradient(#083f50,#052f3d);color:#fff0bd;box-shadow:0 14px 30px rgba(0,18,29,.6)}.game-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}.game-head h2{margin:0;color:#fff0bd}.badge{background:rgba(212,165,76,.2);border:1px solid #d4a54c;border-radius:8px;padding:4px 10px;font-size:.8rem;color:#ffd76a}#board{position:relative;margin:12px auto;background:radial-gradient(circle at 50% 30%,rgba(86,200,208,.15),transparent 50%),linear-gradient(180deg,#0a3d4d 0,#062d39 100%);border:3px solid #d4a54c;border-radius:12px;padding:12px;display:flex;align-items:center;justify-content:center}.deadlock-modal,.lose-modal,.win-modal{border:3px solid #d4a34c;border-radius:20px;background:radial-gradient(circle at 50% 0,#176174,#073b4c 75%);color:#fff;text-align:center;padding:25px;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.6)}.deadlock-modal h2,.lose-modal h2,.win-modal h2{color:#ffd76a;margin:12px 0 8px}.modal-actions{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}.modal-actions button{padding:10px 16px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;transition:all .2s ease}@media(max-width:950px){.home-layout{grid-template-columns:95px 1fr}.right-rail{display:none}.side-btn{font-size:.72rem}.home-main{grid-template-columns:1fr 1fr}.mode-card:last-child{grid-column:1/3}.bottom-btn{font-size:.8rem}}@media(max-width:600px){.topbar{height:56px;padding:5px 8px}.brand{font-size:1rem}.wallet span{min-width:auto;padding:5px 8px;font-size:.75rem}.shell{padding:7px 5px 18px}.captain-card{max-width:none;flex-direction:column;text-align:center;padding:8px}.captain-card h1{font-size:1.1rem}.logo{padding:8px 12px;border-width:3px}.home-layout{grid-template-columns:1fr}.side-menu{flex-direction:row;flex-wrap:wrap}.side-btn{flex:1;min-width:70px;padding:8px}.home-main{grid-template-columns:1fr}.right-rail{display:none}.home-bottom{flex-direction:column}.bottom-btn{width:100%;min-width:auto}.game-panel{padding:12px}.map-panel{padding:12px}}
 </style>
 </head>
 <body>
-<header class="topbar"><div class="brand">🏴‍☠️ Mahjong Pirate</div><div class="wallet"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span></div></header>
+<header class="topbar">
+  <div class="brand">🏴‍☠️ Mahjong Pirate</div>
+  <div class="wallet">
+    <span>🪙 <b id="coins">0</b></span>
+    <span>💎 <b id="gems">0</b></span>
+  </div>
+</header>
+
+<button id="soundToggle">🔊</button>
+
 <main class="shell">
-<section class="captain-card"><div><div class="eyebrow">Capitaine</div><h1 id="captainName">Mousse des Caraïbes</h1><div class="statsline"><span>Niv. <b id="level">1</b></span><span>XP <b id="xp">0</b></span><span>🏆 <b id="bestScore">0</b></span></div></div><button id="resetProgress" class="ghost" type="button">⚙️</button></section>
+<section class="captain-card">
+  <div>
+    <div class="eyebrow">Capitaine</div>
+    <h1 id="captainName">Mousse des Caraïbes</h1>
+    <div class="statsline">
+      <span>Niv. <b id="level">1</b></span>
+      <span>XP <b id="xp">0</b></span>
+    </div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-size:2rem">🏴‍☠️</div>
+  </div>
+</section>
+
 <section id="home">
 <div class="home-scene">
-<div class="logo"><div class="wheel">⚓ ☠️ ⚓</div><h2>MAHJONG</h2><strong>PIRATES</strong></div>
-<div class="home-layout">
-<nav class="side-menu"><button class="side-btn active"><span>🏠</span>Accueil</button><button class="side-btn" data-open-map><span>🧭</span>Modes</button><button class="side-btn"><span>☠️</span>Défis</button><button class="side-btn"><span>🧰</span>Collection</button><button class="side-btn"><span>🪙</span>Boutique</button></nav>
-<div class="home-main">
-<article class="mode-card"><h3>Classique</h3><div class="mode-art">🀄🏝️🀄</div><p>Le mahjong classique, un moment de détente.</p><button class="play green" data-start-level="1">JOUER</button></article>
-<article class="mode-card"><h3>Aventure</h3><div class="mode-art">🗺️🧭💰</div><p>Des niveaux à explorer, des îles et des trésors.</p><button class="play blue" data-open-map>JOUER</button></article>
-<article class="mode-card"><h3>Défis</h3><div class="mode-art">☠️💎💣</div><p>Relève les défis pirates et gagne des récompenses.</p><button class="play red" id="dailyPlay">JOUER</button></article>
-</div>
-<aside class="right-rail"><div class="promo daily"><h3>📅 Défi du jour</h3><div class="promo-art">🀄 🀄</div><p>Termine ce plateau et gagne des pièces !</p><button class="play green" id="dailyPlay2" data-start-level="1">JOUER</button></div><div class="promo event"><h3>🏴‍☠️ Événements</h3><div class="promo-art">🏝️ 🚢 💰</div><p><b>ÎLE AUX TRÉSORS</b><br>5 / 10 coffres découverts</p><div class="target-line" style="position:relative;left:auto;right:auto;top:auto;height:9px"><i style="width:50%"></i></div></div></aside>
-</div>
-<div class="home-bottom"><button class="bottom-btn">📊 Classement</button><button class="bottom-btn">🏆 Succès</button><button class="bottom-btn" data-open-map>🗺️ Aventure</button></div>
+  <div class="logo">
+    <div class="wheel">⚓ ☠️ ⚓</div>
+    <h2>MAHJONG</h2>
+    <strong>PIRATES</strong>
+  </div>
+  
+  <div class="home-layout">
+    <nav class="side-menu">
+      <button class="side-btn active"><span>🏠</span>Accueil</button>
+      <button class="side-btn" data-open-map><span>🧭</span>Modes</button>
+      <button class="side-btn"><span>⚙️</span>Paramètres</button>
+    </nav>
+    
+    <div class="home-main">
+      <article class="mode-card">
+        <h3>Classique</h3>
+        <div class="mode-art">🀄🏝️🀄</div>
+        <p>Le mahjong classique, un moment de détente.</p>
+        <button class="play green" data-start-level="1">JOUER</button>
+      </article>
+      
+      <article class="mode-card">
+        <h3>Aventure</h3>
+        <div class="mode-art">🗺️🧭💰</div>
+        <p>Des niveaux à explorer, des îles et des trésors.</p>
+        <button class="play blue" data-open-map>JOUER</button>
+      </article>
+      
+      <article class="mode-card">
+        <h3>Défis</h3>
+        <div class="mode-art">☠️💎💣</div>
+        <p>Relève les défis pirates et gagne des récompenses.</p>
+        <button class="play red" id="dailyPlay">JOUER</button>
+      </article>
+    </div>
+    
+    <aside class="right-rail">
+      <div class="promo daily">
+        <h3>📅 Défi du jour</h3>
+        <div class="promo-art">🀄 🀄</div>
+        <p>Termine ce plateau et gagne des pièces !</p>
+        <button class="play green" id="dailyBtn">Relever</button>
+      </div>
+    </aside>
+  </div>
+  
+  <div class="home-bottom">
+    <button class="bottom-btn">📊 Classement</button>
+    <button class="bottom-btn">🏆 Succès</button>
+    <button class="bottom-btn" data-open-map>🗺️ Aventure</button>
+  </div>
 </div>
 </section>
-<section id="map" class="map-panel hidden"><div class="map-banner"><div><div class="eyebrow">Carte de navigation</div><h2>À la chasse au trésor</h2><p>15 escales, des plateaux de plus en plus dangereux.</p></div><div class="compass">🧭</div></div><div class="section-title"><span>🗺️ La route des pirates</span><b id="mapProgress">1/15</b></div><div class="map-sea"><div class="route"><button class="island" data-level="1"><span>🏝️</span><strong>Île du Départ</strong><small>48 tuiles</small><em>⚓ Port</em></button><button class="island" data-level="2"><span>🌴</span><strong>Baie des Palmiers</strong><small>60 tuiles</small><em>🌴 Escale</em></button><button class="island" data-level="3"><span>🐙</span><strong>Île du Kraken</strong><small>72 tuiles</small><em>☠️ Danger</em></button><button class="island" data-level="4"><span>🏰</span><strong>Fort des Flibustiers</strong><small>84 tuiles</small><em>🏰 Bastion</em></button><button class="island" data-level="5"><span>💰</span><strong>Île au Trésor</strong><small>96 tuiles</small><em>💰 Trésor</em></button><button class="island" data-level="6"><span>🧜</span><strong>Crique des Sirènes</strong><small>108 tuiles</small><em>Passage</em></button><button class="island" data-level="7"><span>👻</span><strong>Archipel Fantôme</strong><small>120 tuiles</small><em>Brume</em></button><button class="island" data-level="8"><span>🐙</span><strong>Grotte du Kraken</strong><small>132 tuiles</small><em>Antre</em></button><button class="island" data-level="9"><span>🌪️</span><strong>Fort de la Tempête</strong><small>144 tuiles</small><em>Tempête</em></button><button class="island" data-level="10"><span>🏴‍☠️</span><strong>Mer des Corsaires</strong><small>144 tuiles</small><em>Guerre</em></button><button class="island" data-level="11"><span>⚓</span><strong>Île des Épaves</strong><small>144 tuiles</small><em>Épaves</em></button><button class="island" data-level="12"><span>🐉</span><strong>Baie du Dragon</strong><small>144 tuiles</small><em>Dragon</em></button><button class="island" data-level="13"><span>🦈</span><strong>Citadelle du Requin</strong><small>144 tuiles</small><em>Prédateur</em></button><button class="island" data-level="14"><span>🌋</span><strong>Volcan des Pirates</strong><small>144 tuiles</small><em>Danger ultime</em></button><button class="island" data-level="15"><span>👑</span><strong>Grand Trésor</strong><small>144 tuiles</small><em>Boss final</em></button></div></div><div class="map-legend"><span>⚓ Escale</span><span>☠️ Danger</span><span>🔒 À débloquer</span><span>👑 Boss</span></div></section>
-<section id="game" class="game-panel hidden"><div class="game-head"><div><div class="eyebrow">Aventure en cours</div><h2 id="islandTitle">Île du Départ</h2><span id="difficulty" class="badge">Facile</span></div><button id="homeBtn" class="ghost" type="button">← Accueil</button></div><div class="level-targets"><div><b id="goal1">270</b><small>⚓</small></div><div><b id="goal2">540</b><small>🏴‍☠️</small></div><div><b id="goal3">900</b><small>💰</small></div><div class="target-line"><i id="goalBar"></i></div></div><div class="hud"><div><small>Score</small><b id="score">0</b></div><div><small>Restantes</small><b id="remaining">0</b></div><div><small>Temps</small><b id="time">00:00</b></div><div><small>Coups</small><b id="moves">0</b></div><div><small>Paires</small><b id="pairs">0</b></div></div><div class="actions"><button id="hint" type="button">💡 Indice</button><button id="shuffle" type="button">🔀 Mélanger</button><button id="restart" type="button">🔄 Rejouer</button></div><div id="msg" class="message"></div><div id="board" class="board"></div><div class="boosters"><button id="undo" type="button"><span>↩️</span><small>Annuler</small><b id="undoCount">0</b></button><button id="bomb" type="button"><span>💣</span><small>Canon</small></button><button id="hint2" type="button"><span>💡</span><small>Boussole</small></button><button id="shuffle2" type="button"><span>🔀</span><small>Mélange</small><b id="shuffleCount">0</b></button></div></section>
+
+<section id="map" class="map-panel hidden">
+  <div class="map-banner">
+    <div>
+      <div class="eyebrow">Carte de navigation</div>
+      <h2>À la chasse au trésor</h2>
+      <p>15 escales, des plateaux de plus en plus difficiles. Chaque île offre des défis uniques !</p>
+    </div>
+  </div>
+  <div id="mapIslands" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(80px,1fr)); gap:8px; margin-top:16px"></div>
+</section>
+
+<section id="game" class="game-panel hidden">
+  <div class="game-head">
+    <div>
+      <div class="eyebrow">Aventure en cours</div>
+      <h2 id="islandTitle">Île du Départ</h2>
+    </div>
+    <span id="difficulty" class="badge">Facile</span>
+  </div>
+  
+  <div style="display:flex; justify-content:space-between; margin-bottom:12px; color:#fff0bd; font-size:0.9rem">
+    <div>⏱️ <b id="time">00:00</b></div>
+    <div>🎯 <b id="pairs">0</b> paires</div>
+    <div>📊 <b id="score">0</b> pts</div>
+  </div>
+  
+  <div id="board"></div>
+  
+  <div style="display:flex; gap:10px; margin-top:12px">
+    <button id="hint" class="play green" style="flex:1">💡 Indice</button>
+    <button id="shuffle" class="play blue" style="flex:1">🔀 Mélanger</button>
+  </div>
+  
+  <div id="msg" style="text-align:center; margin-top:8px; color:#ffd76a; min-height:20px"></div>
+</section>
 </main>
-<dialog id="deadlock" class="deadlock-modal"><div style="font-size:3rem">⚓</div><h2>Impasse !</h2><p id="deadlockText"></p><div class="modal-actions"><button id="deadlockShuffle" type="button">🔀 Mélanger</button><button id="deadlockRestart" type="button">🔄 Recommencer</button></div></dialog>
-<dialog id="lose" class="lose-modal"><h2>Partie bloquée</h2><p id="loseText"></p><div class="modal-actions"><button id="loseUndo" type="button">↩️ Annuler</button><button id="loseRestart" type="button">🔄 Recommencer</button></div></dialog>
-<dialog id="win" class="win-modal"><h2>🏆 Trésor découvert !</h2><p id="winText"></p><div id="stars">★★★</div><p>🪙 <b id="rewardCoins">0</b> &nbsp; ✨ <b id="rewardXp">0</b> XP</p><div class="modal-actions"><button id="homeWin" type="button">Accueil</button><button id="next" type="button">Île suivante</button></div></dialog>
-<script src="app.js?v=20260907-7" defer></script><script src="progression.js?v=20260906-1" defer></script><script src="missions.js?v=20260906-2" defer></script><script src="arsenal.js?v=20260906-1" defer></script><script src="home-ui.js?v=20260907-1" defer></script>
-</body></html>
+
+<dialog id="deadlock" class="deadlock-modal">
+  <div style="font-size:3rem">⚓</div>
+  <h2>Impasse !</h2>
+  <p id="deadlockText"></p>
+  <div class="modal-actions">
+    <button id="deadlockShuffle" type="button">🔀 Mélanger</button>
+    <button id="deadlockRestart" type="button">🔄 Recommencer</button>
+  </div>
+</dialog>
+
+<dialog id="lose" class="lose-modal">
+  <h2>Partie bloquée</h2>
+  <p id="loseText"></p>
+  <div class="modal-actions">
+    <button id="loseUndo" type="button">↩️ Annuler</button>
+    <button id="loseRestart" type="button">🔄 Recommencer</button>
+  </div>
+</dialog>
+
+<dialog id="win" class="win-modal">
+  <h2>🏆 Trésor découvert !</h2>
+  <p id="winText"></p>
+  <div id="stars">★★★</div>
+  <p>🪙 <b id="rewardCoins">0</b> &nbsp; ✨ <b id="rewardXp">0</b> XP</p>
+  <div class="modal-actions">
+    <button id="winNext" type="button">➡️ Suivant</button>
+    <button id="winHome" type="button">🏠 Accueil</button>
+  </div>
+</dialog>
+
+<!-- Scripts optimisés et en ordre de dépendance -->
+<script src="app.js?v=20260908-1" defer></script>
+<script src="progression.js?v=20260906-1" defer></script>
+<script src="missions.js?v=20260906-2" defer></script>
+<script src="arsenal.js?v=20260906-1" defer></script>
+<script src="shapes.js?v=20260906-1" defer></script>
+<script src="home-ui.js?v=20260907-1" defer></script>
+
+<!-- Nouveaux scripts pour améliorations -->
+<script src="mobile.js?v=20260908-1" defer></script>
+<script src="audio.js?v=20260908-1" defer></script>
+<script src="gameplay.js?v=20260908-1" defer></script>
+
+</body>
+</html>
