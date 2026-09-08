@@ -1,7 +1,12 @@
 /* Finition visuelle des tuiles Mahjong Pirates — Mobile First */
-.board .tile {
+/* IMPORTANT : le plateau est #board (id), pas .board. Les tuiles sont
+   positionnées en absolu par app.js pour respecter les coordonnées x/y des
+   couches du Mahjong Solitaire. */
+#board .tile {
   width: 58px;
   height: 70px;
+  position: absolute;
+  box-sizing: border-box;
   border: 2px solid #d8b66b;
   border-radius: 10px;
   padding: 0;
@@ -24,10 +29,9 @@
   -webkit-tap-highlight-color: transparent;
   transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
-  position: relative;
 }
 
-.board .tile::before {
+#board .tile::before {
   content: "";
   position: absolute;
   inset: 3px;
@@ -37,7 +41,7 @@
   pointer-events: none;
 }
 
-.board .tile::after {
+#board .tile::after {
   right: 3px;
   bottom: 2px;
   font-size: 0.45rem;
@@ -46,7 +50,7 @@
 }
 
 /* Ombres progressives par couche */
-.board .tile[data-layer="0"] {
+#board .tile[data-layer="0"] {
   box-shadow:
     inset 1px 1px 2px rgba(255,255,255, 0.95),
     inset -2px -3px 4px rgba(100,65,25, 0.3),
@@ -54,7 +58,7 @@
     5px 7px 12px rgba(0, 20, 28, 0.55);
 }
 
-.board .tile[data-layer="1"] {
+#board .tile[data-layer="1"] {
   box-shadow:
     inset 1px 1px 2px rgba(255,255,255, 0.9),
     inset -2px -3px 4px rgba(100,65,25, 0.32),
@@ -62,7 +66,7 @@
     7px 10px 14px rgba(0, 15, 20, 0.62);
 }
 
-.board .tile[data-layer="2"] {
+#board .tile[data-layer="2"] {
   box-shadow:
     inset 1px 1px 2px rgba(255,255,255, 0.85),
     inset -2px -3px 4px rgba(100,65,25, 0.35),
@@ -70,8 +74,8 @@
     8px 12px 16px rgba(0, 10, 15, 0.68);
 }
 
-.board .tile[data-layer="3"],
-.board .tile[data-layer="4"] {
+#board .tile[data-layer="3"],
+#board .tile[data-layer="4"] {
   box-shadow:
     inset 1px 1px 2px rgba(255,255,255, 0.8),
     inset -2px -3px 4px rgba(100,65,25, 0.38),
@@ -80,7 +84,7 @@
 }
 
 /* État libre - tuiles jouables brillantes */
-.board .tile.free {
+#board .tile.free {
   filter: saturate(1.12) brightness(1.08) contrast(1.05);
   box-shadow:
     inset 1px 1px 2px rgba(255,255,255, 1),
@@ -90,7 +94,7 @@
     0 0 2px rgba(255, 221, 132, 0.35);
 }
 
-.board .tile.free:hover {
+#board .tile.free:hover {
   transform: translate(-2px, -6px) scale(1.08);
   filter: saturate(1.2) brightness(1.18) contrast(1.1);
   box-shadow:
@@ -101,20 +105,20 @@
     0 0 24px rgba(244, 201, 95, 0.42);
 }
 
-.board .tile.free:active {
+#board .tile.free:active {
   transform: translate(1px, 1px) scale(0.97);
   filter: saturate(1.15) brightness(1.12);
 }
 
 /* État bloqué - tuiles non jouables */
-.board .tile.blocked {
+#board .tile.blocked {
   filter: brightness(0.68) saturate(0.72) contrast(0.92);
   opacity: 0.88;
   cursor: not-allowed;
 }
 
 /* État sélectionné - très visible */
-.board .tile.selected {
+#board .tile.selected {
   outline: 4px solid #ffd76a;
   outline-offset: 3px;
   transform: translateY(-8px) scale(1.1);
@@ -154,15 +158,15 @@
 }
 
 /* Familles de tuiles avec identité visuelle distincte */
-.board .tile[class*="kind-"] {
+#board .tile[class*="kind-"] {
   background-color: #f4e2b8;
 }
 
 /* Or - Trésors dorés */
-.board .tile.kind-0,
-.board .tile.kind-8,
-.board .tile.kind-14,
-.board .tile.kind-17 {
+#board .tile.kind-0,
+#board .tile.kind-8,
+#board .tile.kind-14,
+#board .tile.kind-17 {
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255, 0.9) 0 8%, transparent 10%),
     linear-gradient(145deg, #fffbea 0%, #f9e4a0 42%, #d4a852 76%, #c49040 100%);
@@ -171,14 +175,14 @@
 }
 
 /* Bleu - Mers et Océans */
-.board .tile.kind-1,
-.board .tile.kind-4,
-.board .tile.kind-7,
-.board .tile.kind-11,
-.board .tile.kind-12,
-.board .tile.kind-13,
-.board .tile.kind-15,
-.board .tile.kind-19 {
+#board .tile.kind-1,
+#board .tile.kind-4,
+#board .tile.kind-7,
+#board .tile.kind-11,
+#board .tile.kind-12,
+#board .tile.kind-13,
+#board .tile.kind-15,
+#board .tile.kind-19 {
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255, 0.9) 0 8%, transparent 10%),
     linear-gradient(145deg, #e8f7ff 0%, #d0e8ff 42%, #7eb3d4 76%, #4a8bb0 100%);
@@ -187,10 +191,10 @@
 }
 
 /* Corail - Terres et Vie */
-.board .tile.kind-2,
-.board .tile.kind-3,
-.board .tile.kind-6,
-.board .tile.kind-18 {
+#board .tile.kind-2,
+#board .tile.kind-3,
+#board .tile.kind-6,
+#board .tile.kind-18 {
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255, 0.9) 0 8%, transparent 10%),
     linear-gradient(145deg, #fffaf5 0%, #f0e0d5 50%, #d4b8ac 76%, #b89b91 100%);
@@ -199,10 +203,10 @@
 }
 
 /* Vert - Nature et Végétation */
-.board .tile.kind-5,
-.board .tile.kind-9,
-.board .tile.kind-10,
-.board .tile.kind-16 {
+#board .tile.kind-5,
+#board .tile.kind-9,
+#board .tile.kind-10,
+#board .tile.kind-16 {
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255, 0.9) 0 8%, transparent 10%),
     linear-gradient(145deg, #fffdf0 0%, #e9f0c5 50%, #b8d87a 76%, #98b85d 100%);
@@ -212,54 +216,36 @@
 
 /* Animation de disparition des tuiles */
 @keyframes tileRemove {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.7;
-    filter: brightness(1.4) saturate(1.5);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.5) rotate(15deg);
-  }
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; filter: brightness(1.4) saturate(1.5); }
+  100% { opacity: 0; transform: scale(0.5) rotate(15deg); }
 }
 
-.board .tile.removing {
-  animation: tileRemove 0.5s ease-out forwards;
-}
+#board .tile.removing { animation: tileRemove 0.5s ease-out forwards; }
 
 /* Optimisation pour appareils tactiles */
 @media (hover: none) {
-  .board .tile.free:hover {
-    transform: translate(-1px, -3px) scale(1.05);
-  }
+  #board .tile.free:hover { transform: translate(-1px, -3px) scale(1.05); }
 }
 
 /* Responsive - Petit écran mobile */
 @media (max-width: 700px) {
-  .board .tile {
+  #board .tile {
     width: 56px;
     height: 68px;
     font-size: 1.68rem;
     border-radius: 9px;
   }
-
-  .board .tile.selected {
+  #board .tile.selected {
     outline: 3px solid #ffd76a;
     outline-offset: 2px;
     transform: translateY(-7px) scale(1.08);
   }
-
-  .board .tile::before {
-    inset: 3px;
-    border-radius: 6px;
-  }
+  #board .tile::before { inset: 3px; border-radius: 6px; }
 }
 
 @media (max-width: 480px) {
-  .board .tile {
+  #board .tile {
     width: 52px;
     height: 64px;
     font-size: 1.55rem;
@@ -271,12 +257,8 @@
       3px 3px 0 #6b4727,
       5px 6px 10px rgba(0, 20, 28, 0.5);
   }
-
-  .board .tile.free:hover {
-    transform: translate(-1px, -4px) scale(1.06);
-  }
-
-  .board .tile.selected {
+  #board .tile.free:hover { transform: translate(-1px, -4px) scale(1.06); }
+  #board .tile.selected {
     outline: 3px solid #ffd76a;
     outline-offset: 1px;
     transform: translateY(-6px) scale(1.06);
@@ -285,26 +267,13 @@
 
 /* Respect des préférences d'accessibilité */
 @media (prefers-reduced-motion: reduce) {
-  .board .tile {
-    transition: none !important;
-  }
-
-  .board .tile.selected {
-    animation: none !important;
-  }
-
-  .board .tile.free:hover {
-    transform: none;
-  }
+  #board .tile { transition: none !important; }
+  #board .tile.selected { animation: none !important; }
+  #board .tile.free:hover { transform: none; }
 }
 
 /* Mode sombre - futur support */
 @media (prefers-color-scheme: dark) {
-  .board .tile {
-    filter: brightness(0.95);
-  }
-
-  .board .tile.free {
-    filter: saturate(1.05) brightness(1.02);
-  }
+  #board .tile { filter: brightness(0.95); }
+  #board .tile.free { filter: saturate(1.05) brightness(1.02); }
 }
