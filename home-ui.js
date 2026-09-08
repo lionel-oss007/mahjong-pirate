@@ -1,14 +1,22 @@
 (function(){
   const $=id=>document.getElementById(id);
   const state=()=>{try{return JSON.parse(localStorage.getItem('mahjongPirateState')||'null')||{level:1,xp:0,unlocked:1,coins:0,gems:0}}catch(e){return {level:1,xp:0,unlocked:1,coins:0,gems:0}}};
+  let classicPromise=null;
+  function ensureClassic(){
+    if(typeof window.startClassicMahjong==='function')return Promise.resolve();
+    if(classicPromise)return classicPromise;
+    classicPromise=new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='classic-mahjong.js?v=20260908-1';s.onload=()=>resolve();s.onerror=reject;document.head.appendChild(s)});
+    return classicPromise;
+  }
   function boot(){
     const home=$('home');if(!home)return;
     const map=()=>$('map'),game=()=>$('game');
     const currentLevel=()=>{const c=document.querySelector('.island.current');return c?Number(c.dataset.level)||1:1};
     const start=(level)=>{home.classList.add('hidden');map()?.classList.add('hidden');game()?.classList.remove('hidden');if(typeof window.newGame==='function')window.newGame(level)};
+    const startClassic=()=>{home.classList.add('hidden');map()?.classList.add('hidden');game()?.classList.remove('hidden');ensureClassic().then(()=>window.startClassicMahjong?.()).catch(()=>{if(typeof window.newGame==='function')window.newGame(1)})};
     const homeView=()=>{if(typeof window.home==='function')window.home();map()?.classList.add('hidden');game()?.classList.add('hidden');home.classList.remove('hidden');closePanel();home.scrollIntoView({behavior:'smooth',block:'start'})};
     const mapView=()=>{home.classList.add('hidden');game()?.classList.add('hidden');map()?.classList.remove('hidden');closePanel();map()?.scrollIntoView({behavior:'smooth',block:'start'})};
-    document.querySelectorAll('[data-start-level]').forEach(b=>{if(b.id!=='dailyPlay2')b.addEventListener('click',()=>start(Number(b.dataset.startLevel)||1))});
+    document.querySelectorAll('[data-start-level]').forEach(b=>{if(b.id!=='dailyPlay2')b.addEventListener('click',()=>{if(Number(b.dataset.startLevel)===1&&b.closest('.mode-card'))startClassic();else start(Number(b.dataset.startLevel)||1)})});
     document.querySelectorAll('[data-open-map]').forEach(b=>b.addEventListener('click',mapView));
     document.querySelectorAll('[data-home]').forEach(b=>b.addEventListener('click',homeView));
     $('homeBtn')?.addEventListener('click',homeView);
