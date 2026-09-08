@@ -1,0 +1,393 @@
+/* Animations et effets avancés */
+
+/* Particules flottantes */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: particleFade 0.8s ease-out forwards;
+}
+
+@keyframes particleFade {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+/* Effet de pulsation pour combo */
+@keyframes comboPluse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.pulse {
+  animation: comboPluse 0.5s ease-in-out infinite !important;
+}
+
+/* Affichage du combo */
+#combo {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffd76a;
+  text-shadow: 0 0 10px rgba(255, 215, 106, 0.6), 0 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+/* Animations de tuiles */
+@keyframes tileAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.board .tile {
+  animation: tileAppear 0.3s ease-out;
+}
+
+/* Tuile en cours de disparition */
+@keyframes tileDisappear {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(1.5) saturate(2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) rotate(180deg);
+  }
+}
+
+.board .tile.removing {
+  animation: tileDisappear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+/* Effelts de glow sur tuile sélectionnée */
+@keyframes tileGlow {
+  0%, 100% {
+    box-shadow:
+      inset 1px 1px 3px rgba(255,255,255, 1),
+      inset -2px -3px 4px rgba(100,65,25, 0.25),
+      5px 8px 0 #654123,
+      10px 16px 20px rgba(0, 10, 15, 0.75),
+      0 0 28px rgba(255, 215, 106, 0.55),
+      0 0 12px rgba(255, 215, 106, 0.35);
+  }
+  50% {
+    box-shadow:
+      inset 1px 1px 3px rgba(255,255,255, 1),
+      inset -2px -3px 4px rgba(100,65,25, 0.25),
+      5px 8px 0 #654123,
+      10px 16px 20px rgba(0, 10, 15, 0.75),
+      0 0 40px rgba(255, 215, 106, 0.8),
+      0 0 20px rgba(255, 215, 106, 0.6);
+  }
+}
+
+.board .tile.selected {
+  animation: tileGlow 0.8s ease-in-out infinite !important;
+}
+
+/* Animation de victoire */
+@keyframes victoryBounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+.game-panel.victory {
+  animation: victoryBounce 0.5s ease-in-out;
+}
+
+/* Animation d'entrée des modales */
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.deadlock-modal,
+.lose-modal,
+.win-modal {
+  animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* Animations des boutons */
+@keyframes buttonPress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.play:active,
+.side-btn:active,
+.bottom-btn:active,
+button:active {
+  animation: buttonPress 0.2s ease !important;
+}
+
+/* Effet de ripple au clic */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0);
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
+}
+
+/* Indicateurs de progression animés */
+.progress-bar {
+  position: relative;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #28d962, #18b950);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(40, 217, 98, 0.5);
+}
+
+/* Animations de score */
+@keyframes scorePopup {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-40px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.score-popup {
+  position: absolute;
+  font-weight: bold;
+  color: #ffd76a;
+  text-shadow: 0 0 10px rgba(255, 215, 106, 0.8);
+  animation: scorePopup 0.8s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Animations de notifications */
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+  border: 2px solid #d4a54c;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #ffd76a;
+  font-weight: bold;
+  z-index: 1001;
+  animation: toastSlideIn 0.3s ease;
+}
+
+.toast.closing {
+  animation: toastSlideOut 0.3s ease forwards;
+}
+
+/* Animations des badges de difficulté */
+@keyframes badgePulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(212, 165, 76, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(212, 165, 76, 0.6);
+  }
+}
+
+.badge {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+/* Animations de flip des cartes */
+@keyframes cardFlip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(180deg);
+  }
+}
+
+.mode-card {
+  perspective: 1000px;
+}
+
+.mode-card:active {
+  animation: cardFlip 0.6s ease-in-out;
+}
+
+/* Animation du logo au chargement */
+@keyframes logoEntry {
+  from {
+    opacity: 0;
+    transform: scale(0.8) rotateY(180deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+  }
+}
+
+.logo {
+  animation: logoEntry 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Animations du texte */
+@keyframes textShimmer {
+  0%, 100% {
+    color: #f4d76a;
+  }
+  50% {
+    color: #ffd76a;
+  }
+}
+
+.topbar .brand {
+  animation: textShimmer 3s ease-in-out infinite;
+}
+
+/* Animation de spin pour chargement */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  animation: spin 1s linear infinite;
+}
+
+/* Animations fluides de transition */
+* {
+  transition: all 0.15s ease;
+}
+
+/* Respect des préférences d'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .pulse,
+  .loading {
+    animation: none !important;
+  }
+}
+
+/* Écran tactile - animations légères */
+@media (hover: none) {
+  .board .tile.free:hover {
+    animation: none;
+  }
+
+  .pulse {
+    animation: comboPluse 0.3s ease-in-out infinite !important;
+  }
+}
