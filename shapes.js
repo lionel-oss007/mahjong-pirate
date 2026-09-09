@@ -6,36 +6,12 @@
  * métadonnées visuelles afin de ne jamais remplacer le layout du moteur.
  */
 (function(){
-  window.__mahjongPirateShapes = {
-    version: '6.0',
-    source: 'app.js',
-    note: 'La géométrie jouable est pilotée exclusivement par app.js.'
-  };
-  if (!document.querySelector('link[data-home-visual]')) {
-    var link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'home-visual.css?v=20260909-5';
-    link.dataset.homeVisual = '1';
-    document.head.appendChild(link);
-  }
-  if (!document.querySelector('link[data-mobile-game-ui]')) {
-    var mobile = document.createElement('link');
-    mobile.rel = 'stylesheet';
-    mobile.href = 'mobile-game-ui.css?v=20260909-3';
-    mobile.dataset.mobileGameUi = '1';
-    document.head.appendChild(mobile);
-  }
-  if (!document.querySelector('link[data-mobile-home-ui]')) {
-    var homeCss = document.createElement('link');
-    homeCss.rel = 'stylesheet';
-    homeCss.href = 'mobile-home-ui.css?v=20260909-1';
-    homeCss.dataset.mobileHomeUi = '1';
-    document.head.appendChild(homeCss);
-  }
-  if (!document.querySelector('script[data-mobile-home-ui]')) {
-    var script = document.createElement('script');
-    script.src = 'mobile-home-ui.js?v=20260909-2';
-    script.dataset.mobileHomeUi = '1';
-    document.head.appendChild(script);
-  }
+  window.__mahjongPirateShapes = {version:'6.0',source:'app.js',note:'La géométrie jouable est pilotée exclusivement par app.js.'};
+  function css(href,attr){if(document.querySelector('link['+attr+']'))return;var link=document.createElement('link');link.rel='stylesheet';link.href=href;link.setAttribute(attr,'1');document.head.appendChild(link)}
+  function js(src,attr){if(document.querySelector('script['+attr+']'))return;var s=document.createElement('script');s.src=src;s.setAttribute(attr,'1');document.head.appendChild(s)}
+  css('home-visual.css?v=20260909-6','data-home-visual');
+  css('mobile-game-ui.css?v=20260909-4','data-mobile-game-ui');
+  css('mobile-home-ui.css?v=20260909-2','data-mobile-home-ui');
+  js('mobile-home-ui.js?v=20260909-4','data-mobile-home-ui');
+  js('home-enforcer.js?v=20260909-1','data-home-enforcer');
 })();
