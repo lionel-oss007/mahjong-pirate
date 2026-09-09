@@ -19,7 +19,6 @@
  const originalNewGame=newGame;newGame=function(){runUsedShuffle=false;return originalNewGame.apply(this,arguments)};
  const originalShuffle=shuffle;shuffle=function(){runUsedShuffle=true;return originalShuffle.apply(this,arguments)};
  const originalWin=win;win=function(){const completed=checkWin();const result=originalWin.apply(this,arguments);if(completed.length){const text=document.getElementById('winText');if(text)text.innerHTML+='<br><strong style="color:#f4ce61">📜 Mission'+(completed.length>1?'s':'')+' accomplie'+(completed.length>1?'s':'')+' : '+completed.map(m=>m.icon+' '+m.title).join(' · ')+'</strong>'}refresh();return result};
- const originalReset=resetProgress;resetProgress=function(){const result=originalReset.apply(this,arguments);missionData=fresh();runUsedShuffle=false;saveMissions();refresh();return result};
- function init(){ensureDay();inject();const reset=document.getElementById('resetProgress');if(reset){reset.onclick=null;reset.addEventListener('click',()=>resetProgress())}}
+ function init(){ensureDay();inject()}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

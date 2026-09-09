@@ -16,7 +16,6 @@
     $('dailyPlay2')?.addEventListener('click',()=>start(currentLevel()));
     $('hint2')?.addEventListener('click',()=>window.hint?.());
     $('shuffle2')?.addEventListener('click',()=>window.shuffle?.());
-    $('resetProgress')?.addEventListener('click',()=>{if(confirm('Réinitialiser toute la progression ?')){['mahjongPirateState','mahjongPirateProgression','mahjongPirateMissions','mahjongPirateArsenal'].forEach(k=>localStorage.removeItem(k));location.reload()}});
     decorateScene();bindSideMenu();installPanelStyle();installRulesButton();
   }
   function bindSideMenu(){document.querySelectorAll('.side-btn').forEach(btn=>{const label=btn.textContent.replace(/\s+/g,' ').trim().toLowerCase();btn.addEventListener('click',()=>{document.querySelectorAll('.side-btn').forEach(x=>x.classList.remove('active'));btn.classList.add('active');if(label.includes('accueil'))goHome();else if(label.includes('mode'))showMap();else if(label.includes('défi')||label.includes('defi'))showDaily();else if(label.includes('collection'))showCollection();else if(label.includes('boutique'))showShop()})})}

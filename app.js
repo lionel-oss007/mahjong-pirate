@@ -14,14 +14,83 @@ function updateHud(){if(!$('coins'))return;$('coins').textContent=state.coins;$(
 function rectOverlap(a,b){return a.x<b.x+TILE_W&&a.x+TILE_W>b.x&&a.y<b.y+TILE_H&&a.y+TILE_H>b.y}
 function rectOverlapY(a,b){return a.y<b.y+TILE_H&&a.y+TILE_H>b.y}
 function freeTile(t,tiles){if(t.removed)return false;for(const o of tiles)if(!o.removed&&o.l>t.l&&rectOverlap(t,o))return false;let left=false,right=false;for(const o of tiles){if(o.removed||o.l!==t.l||o.id===t.id||!rectOverlapY(t,o))continue;if(o.x<t.x&&o.x+TILE_W>t.x)left=true;if(o.x<t.x+TILE_W&&o.x+TILE_W>t.x+TILE_W)right=true}return !(left&&right)}
-const SHAPE_PATTERNS={tortue:[2,4,6,6,6,6,6,4,2,2],pyramide:[2,4,6,6,6,6,6,6,6,6],diamant:[2,4,6,6,6,6,6,6,4,2],navire:[0,2,4,6,6,6,6,6,6,6],fort:[6,6,4,4,6,6,4,4,6,6],archipel:[4,6,6,4,6,4,6,6,6,4]};
+
+// Véritables silhouettes de Mahjong Solitaire : la géométrie du plateau est utilisée
+// par le moteur de jeu lui-même, donc une tuile visuellement libre l'est aussi dans les règles.
+const SHAPE_PATTERNS={
+ tortue:[2,4,6,6,6,6,6,4,2,2],
+ pyramide:[2,4,6,6,6,6,6,6,6,6],
+ diamant:[2,4,6,6,6,6,6,6,4,2],
+ navire:[0,2,4,6,6,6,6,6,6,6],
+ fort:[6,6,4,4,6,6,4,4,6,6],
+ archipel:[4,6,6,4,6,4,6,6,6,4]
+};
 const SHAPE_BY_LEVEL={1:'tortue',2:'pyramide',3:'diamant',4:'navire',5:'fort',6:'archipel'};
 function shapeName(level){return SHAPE_BY_LEVEL[Math.min(level,6)]||'archipel'}
-function patternCells(shape){const widths=SHAPE_PATTERNS[shape]||SHAPE_PATTERNS.archipel,cells=[];widths.forEach((width,r)=>{const start=Math.floor((6-width)/2);for(let c=0;c<width;c++)cells.push({r,c:start+c})});return cells}
-function layerTargets(level){if(level===1)return[44,4,0,0,0];if(level===2)return[54,6,0,0,0];if(level===3)return[48,16,8,0,0];if(level===4)return[48,24,12,0,0];if(level===5)return[52,22,14,8,0];if(level===6)return[52,26,14,8,0];if(level===7)return[56,28,16,8,0];if(level===8)return[56,32,20,12,0];return[56,36,24,22,6]}
-function layout(level){const boardW=6*STEP_X+TILE_W+18,boardH=10*STEP_Y+TILE_H+18,out=[];const targets=layerTargets(level),shape=shapeName(level),cells=patternCells(shape);for(let l=0;l<5;l++){const wanted=Math.min(targets[l]||0,cells.length);if(!wanted)continue;const ox=(boardW-(6*STEP_X+TILE_W))/2+l*2;const oy=(boardH-(10*STEP_Y+TILE_H))/2+l*2;const cx=2.5,cy=4.5;const ranked=[...cells].sort((a,b)=>{const da=(a.c-cx)**2+(a.r-cy)**2,db=(b.c-cx)**2+(b.r-cy)**2;return da-db});let chosen=ranked.slice(0,wanted);if(l===0&&wanted===cells.length)chosen=cells;chosen.sort((a,b)=>a.r-b.r||a.c-b.c);chosen.forEach(({r,c})=>out.push({x:ox+c*STEP_X,y:oy+r*STEP_Y,l}))}return out.map((p,i)=>({...p,id:i}))}
+function patternCells(shape){
+ const widths=SHAPE_PATTERNS[shape]||SHAPE_PATTERNS.archipel,cells=[];
+ widths.forEach((width,r)=>{
+  const start=Math.floor((6-width)/2);
+  for(let c=0;c<width;c++)cells.push({r,c:start+c});
+ });
+ return cells;
+}
+function layerTargets(level){
+ if(level===1)return[44,4,0,0,0];
+ if(level===2)return[54,6,0,0,0];
+ if(level===3)return[48,16,8,0,0];
+ if(level===4)return[48,24,12,0,0];
+ if(level===5)return[52,22,14,8,0];
+ if(level===6)return[52,26,14,8,0];
+ if(level===7)return[56,28,16,8,0];
+ if(level===8)return[56,32,20,12,0];
+ return[56,36,24,22,6];
+}
+function layout(level){
+ const boardW=6*STEP_X+TILE_W+18,boardH=10*STEP_Y+TILE_H+18,out=[];
+ const targets=layerTargets(level),shape=shapeName(level),cells=patternCells(shape);
+ for(let l=0;l<5;l++){
+  const wanted=Math.min(targets[l]||0,cells.length);if(!wanted)continue;
+  const ox=(boardW-(6*STEP_X+TILE_W))/2+l*2;
+  const oy=(boardH-(10*STEP_Y+TILE_H))/2+l*2;
+  const cx=2.5,cy=4.5;
+  // Pour les couches supérieures, on garde les zones centrales afin de créer une vraie
+  // construction en étages, tout en conservant la silhouette pirate du niveau.
+  const ranked=[...cells].sort((a,b)=>{
+   const da=(a.c-cx)**2+(a.r-cy)**2,db=(b.c-cx)**2+(b.r-cy)**2;
+   return da-db;
+  });
+  let chosen=ranked.slice(0,wanted);
+  // La base utilise toute la silhouette lorsqu'elle est disponible.
+  if(l===0&&wanted===cells.length)chosen=cells;
+  chosen.sort((a,b)=>a.r-b.r||a.c-b.c);
+  chosen.forEach(({r,c})=>out.push({x:ox+c*STEP_X,y:oy+r*STEP_Y,l}));
+ }
+ return out.map((p,i)=>({...p,id:i}));
+}
 function countFor(level){return counts[level]||144}
-function buildSolvable(level){const positions=layout(level),target=positions.length;for(let attempt=0;attempt<2200;attempt++){const remaining=positions.map(t=>({...t,removed:false})),pairs=[];while(remaining.some(t=>!t.removed)){const free=remaining.filter(t=>!t.removed&&freeTile(t,remaining));if(free.length<2)break;const a=free[Math.floor(Math.random()*free.length)],others=free.filter(t=>t.id!==a.id);const b=others[Math.floor(Math.random()*others.length)];a.removed=b.removed=true;pairs.push([a.id,b.id])}if(pairs.length*2===target){const tiles=positions.map(p=>({...p,removed:false,symbol:null}));pairs.forEach((ids,i)=>ids.forEach(id=>tiles[id].symbol=symbols[i%symbols.length]));return tiles}}const tiles=positions.map(p=>({...p,removed:false,symbol:null}));for(let i=0;i<tiles.length;i+=2){const s=symbols[(i/2)%symbols.length];tiles[i].symbol=s;tiles[i+1].symbol=s}return tiles}
+function buildSolvable(level){
+ const positions=layout(level),target=positions.length;
+ for(let attempt=0;attempt<2200;attempt++){
+  const remaining=positions.map(t=>({...t,removed:false})),pairs=[];
+  while(remaining.some(t=>!t.removed)){
+   const free=remaining.filter(t=>!t.removed&&freeTile(t,remaining));
+   if(free.length<2)break;
+   const a=free[Math.floor(Math.random()*free.length)],others=free.filter(t=>t.id!==a.id);
+   const b=others[Math.floor(Math.random()*others.length)];
+   a.removed=b.removed=true;pairs.push([a.id,b.id]);
+  }
+  if(pairs.length*2===target){
+   const tiles=positions.map(p=>({...p,removed:false,symbol:null}));
+   pairs.forEach((ids,i)=>ids.forEach(id=>tiles[id].symbol=symbols[i%symbols.length]));
+   return tiles;
+  }
+ }
+ // Secours : conserver des paires valides même si une génération aléatoire échoue.
+ const tiles=positions.map(p=>({...p,removed:false,symbol:null}));
+ for(let i=0;i<tiles.length;i+=2){const s=symbols[(i/2)%symbols.length];tiles[i].symbol=s;tiles[i+1].symbol=s}
+ return tiles;
+}
 function symbolKind(s){const i=symbols.indexOf(s);return i<0?'unknown':`kind-${i}`}
 function newGame(level){clearInterval(timer);closeDeadlock();closeLose();game={level,tiles:buildSolvable(level),selected:null,score:0,moves:0,pairs:0,combo:0,bestCombo:0,undo:[],shuffles:0};startedAt=Date.now();$('map').classList.add('hidden');$('game').classList.remove('hidden');$('islandTitle').textContent=names[level]||`Île ${level}`;$('difficulty').textContent=difficulties[level]||'Légendaire';$('msg').textContent='';render();timer=setInterval(tick,500)}
 function tick(){if(!game)return;const sec=Math.floor((Date.now()-startedAt)/1000);$('time').textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`}
@@ -40,7 +109,8 @@ function shuffle(){if(!game)return;closeDeadlock();const active=game.tiles.filte
 function undo(){if(!game||!game.undo.length){$('msg').textContent='↩️ Aucun coup à annuler.';return}const u=game.undo.pop();u.ids.forEach(id=>{const t=game.tiles.find(x=>x.id===id);if(t)t.removed=false});game.score=u.score;game.combo=u.combo;game.pairs=Math.max(0,game.pairs-1);game.moves++;game.selected=null;render();closeDeadlock();$('msg').textContent='↩️ Dernière paire restaurée.';if(!timer)timer=setInterval(tick,500)}
 function bomb(){if(!game)return;const pair=legalPairs()[0];if(!pair){showDeadlock();return}pair.forEach(t=>t.removed=true);game.pairs++;game.score+=100;game.combo=0;game.selected=null;render();$('msg').textContent='💣 Canon pirate ! Une paire libre a été pulvérisée.';if(game.tiles.every(t=>t.removed))win()}
 function updateBoosters(){if(!$('undoCount'))return;$('undoCount').textContent=game?.undo?.length||0;$('shuffleCount').textContent=game?.shuffles||0}
-function win(){clearInterval(timer);timer=null;closeDeadlock();closeLose();const sec=Math.floor((Date.now()-startedAt)/1000),g=goals[game.level]||5000,stars=game.score>=g?3:game.score>=g*.6?2:1,reward=25*game.level+stars*10,xp=30*game.level+stars*12;state.coins+=reward;state.xp+=xp;state.level=Math.max(state.level,Math.min(15,1+Math.floor(state.xp/100)));if(game.score>state.bestScore)state.bestScore=game.score;if(game.level===state.unlocked&&state.unlocked<15)state.unlocked++;save();$('winText').textContent=`Île terminée en ${sec}s avec ${game.moves} coups et ${game.bestCombo} de combo.`;$('stars').textContent='★'.repeat(stars)+'☆'.repeat(3-stars);$('rewardCoins').textContent=reward;$('rewardXp').textContent=xp;$('winNext').textContent=game.level<15?'Île suivante':'Retour à la carte';$('winNext').onclick=()=>{$('win').close();if(game.level<15)newGame(game.level+1);else home()};$('win').showModal();sfx(true)}
+function win(){clearInterval(timer);timer=null;closeDeadlock();closeLose();const sec=Math.floor((Date.now()-startedAt)/1000),g=goals[game.level]||5000,stars=game.score>=g?3:game.score>=g*.6?2:1,reward=25*game.level+stars*10,xp=30*game.level+stars*12;state.coins+=reward;state.xp+=xp;state.level=Math.max(state.level,Math.min(15,1+Math.floor(state.xp/100)));if(game.score>state.bestScore)state.bestScore=game.score;if(game.level===state.unlocked&&state.unlocked<15)state.unlocked++;save();$('winText').textContent=`Île terminée en ${sec}s avec ${game.moves} coups et ${game.bestCombo} de combo.`;$('stars').textContent='★'.repeat(stars)+'☆'.repeat(3-stars);$('rewardCoins').textContent=reward;$('rewardXp').textContent=xp;$('next').textContent=game.level<15?'Île suivante':'Retour à la carte';$('next').onclick=()=>{$('win').close();if(game.level<15)newGame(game.level+1);else home()};$('win').showModal();sfx(true)}
 function home(){clearInterval(timer);timer=null;closeDeadlock();closeLose();game=null;$('game').classList.add('hidden');$('map').classList.remove('hidden');$('msg').textContent='';updateHud()}
 function sfx(ok){try{const c=new AudioContext(),o=c.createOscillator(),g=c.createGain();o.frequency.value=ok?660:180;g.gain.value=.04;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.09)}catch(e){}}
-document.querySelectorAll('.island').forEach(b=>b.onclick=()=>{const l=+b.dataset.level;if(l<=state.unlocked)newGame(l)});if($('hint'))$('hint').onclick=hint;if($('shuffle'))$('shuffle').onclick=shuffle;if($('restart'))$('restart').onclick=()=>game&&newGame(game.level);if($('homeBtn'))$('homeBtn').onclick=home;if($('homeWin'))$('homeWin').onclick=()=>{$('win').close();home()};if($('deadlockShuffle'))$('deadlockShuffle').onclick=shuffle;if($('deadlockRestart'))$('deadlockRestart').onclick=()=>game&&newGame(game.level);if($('undo'))$('undo').onclick=undo;if($('bomb'))$('bomb').onclick=bomb;if($('resetProgress'))$('resetProgress').onclick=()=>{if(confirm('Réinitialiser toute la progression ?')){localStorage.removeItem('mahjongPirateState');state={coins:0,gems:0,level:1,xp:0,bestScore:0,unlocked:1};save()}};if($('loseRestart'))$('loseRestart').onclick=()=>{if($('lose'))$('lose').close();game&&newGame(game.level)};if($('loseUndo'))$('loseUndo').onclick=()=>{if($('lose'))$('lose').close();undo()};window.addEventListener('resize',()=>{if(game)render()});updateHud();
+function resetProgress(){if(!confirm('Réinitialiser toute la progression ?'))return;['mahjongPirateState','mahjongPirateProgression','mahjongPirateMissions','mahjongPirateArsenal'].forEach(key=>localStorage.removeItem(key));location.reload()}
+document.querySelectorAll('.island').forEach(b=>b.onclick=()=>{const l=+b.dataset.level;if(l<=state.unlocked)newGame(l)});if($('hint'))$('hint').onclick=hint;if($('shuffle'))$('shuffle').onclick=shuffle;if($('restart'))$('restart').onclick=()=>game&&newGame(game.level);if($('homeBtn'))$('homeBtn').onclick=home;if($('homeWin'))$('homeWin').onclick=()=>{$('win').close();home()};if($('deadlockShuffle'))$('deadlockShuffle').onclick=shuffle;if($('deadlockRestart'))$('deadlockRestart').onclick=()=>game&&newGame(game.level);if($('undo'))$('undo').onclick=undo;if($('bomb'))$('bomb').onclick=bomb;if($('resetProgress'))$('resetProgress').onclick=resetProgress;if($('loseRestart'))$('loseRestart').onclick=()=>{if($('lose'))$('lose').close();game&&newGame(game.level)};if($('loseUndo'))$('loseUndo').onclick=()=>{if($('lose'))$('lose').close();undo()};window.addEventListener('resize',()=>{if(game)render()});updateHud();

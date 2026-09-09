@@ -18,21 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Branche le moteur des vrais plateaux et la finition des tuiles
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          if 'tile-art.css?v=20260907-1' not in s:
-              marker='</head>'
-              s=s.replace(marker, '<link rel="stylesheet" href="tile-art.css?v=20260907-1">\n'+marker, 1)
-          marker='<script src="app.js?v=20260907-7"></script>'
-          import re
-          s=re.sub(r'<script src="shapes\\.js\\?v=[^"]+"></script>\\s*', '', s)
-          s=s.replace(marker, marker+'\n<script src="shapes.js?v=20260908-2"></script>', 1)
-          p.write_text(s, encoding='utf-8')
-          PY
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
