@@ -1,0 +1,22 @@
+/* Correctif clic île Classique : conserver son centrage pendant le hover/press. */
+.pgh-classic,
+.pgh-classic:hover,
+.pgh-classic:focus-visible,
+.pgh-classic:active {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+
+.pgh-classic:hover {
+  filter: brightness(1.08) !important;
+}
+
+.pgh-classic:active {
+  transform: translate(-50%, 3px) !important;
+}
+
+/* Les autres îles gardent leur animation verticale. */
+.pgh-adventure:hover,
+.pgh-challenge:hover {
+  transform: translateY(-3px) !important;
+}
