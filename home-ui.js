@@ -5,7 +5,7 @@
     if(!document.querySelector('link[data-pirate-final-css]')){
       const css=document.createElement('link');
       css.rel='stylesheet';
-      css.href='game-home-redesign.css?v=20260909-3';
+      css.href='game-home-redesign.css?v=20260909-4';
       css.dataset.pirateFinalCss='1';
       document.head.appendChild(css);
     }
@@ -19,6 +19,12 @@
       const script=document.createElement('script');
       script.src='map-enhancer.js?v=20260909-1';
       script.dataset.pirateMapEnhancer='1';
+      document.body.appendChild(script);
+    }
+    if(!document.querySelector('script[data-pirate-island-polish]')){
+      const script=document.createElement('script');
+      script.src='island-polish.js?v=20260909-1';
+      script.dataset.pirateIslandPolish='1';
       document.body.appendChild(script);
     }
   }
