@@ -1,4 +1,4 @@
-/* Mahjong Pirate — ambiance accueil v1 */
+/* Mahjong Pirate — ambiance accueil v2 */
 .home-scene{isolation:isolate!important;background:radial-gradient(circle at 50% 18%,rgba(255,244,184,.32),transparent 22%),radial-gradient(circle at 12% 70%,rgba(43,190,188,.22),transparent 26%),radial-gradient(circle at 88% 62%,rgba(13,72,86,.35),transparent 30%),linear-gradient(180deg,#27a9b8 0%,#087f91 43%,#075c70 72%,#043f52 100%)!important;box-shadow:inset 0 0 80px rgba(0,24,36,.38),inset 0 -90px 100px rgba(0,34,46,.38),0 14px 35px rgba(0,20,28,.5)!important}
 .home-scene:before{content:'☁️       ☁️';top:28px!important;left:5%!important;right:5%!important;height:110px!important;padding:0!important;font-size:2.7rem!important;letter-spacing:7rem!important;opacity:.24!important;text-shadow:0 25px 35px rgba(255,255,255,.28)!important;pointer-events:none!important;animation:pirateClouds 18s ease-in-out infinite alternate!important}
 .home-scene:after{content:'🌴        ⚓        🌴';left:0!important;right:0!important;bottom:0!important;height:125px!important;padding-top:24px!important;font-size:4.1rem!important;background:linear-gradient(transparent,rgba(1,35,48,.82))!important;opacity:.9!important;filter:drop-shadow(0 -5px 8px rgba(0,22,30,.55))!important;pointer-events:none!important}
@@ -6,7 +6,42 @@
 .home-scene .logo:before{content:'';position:absolute;z-index:-1;inset:-45px -90px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,222,115,.18),transparent 66%);filter:blur(4px);pointer-events:none}
 .logo{background:linear-gradient(145deg,#a96330 0%,#6d3517 48%,#3d1c0c 100%)!important;border-color:#d09a43!important;box-shadow:inset 0 0 0 2px rgba(255,226,145,.25),0 7px 0 #2c1308,0 16px 30px rgba(0,22,30,.48)!important}
 .logo h2{color:#fff1b3!important;text-shadow:3px 4px 0 #351308,0 0 18px rgba(255,215,104,.32)!important}.logo strong{background:linear-gradient(#f2d58b,#c89448)!important;border-color:#6b3616!important;color:#57260f!important}
-.mode-card,.promo,.side-btn,.bottom-btn{box-shadow:inset 0 1px rgba(255,255,255,.48),0 6px 0 #63300f,0 12px 20px rgba(0,25,35,.28)!important}.mode-card:hover,.promo:hover{transform:translateY(-2px)}.mode-art,.promo-art{box-shadow:inset 0 0 28px rgba(0,35,45,.5),0 4px 0 #693714!important}
-.home-main:before{content:'🐚   🐠   🐚';position:absolute;left:2%;bottom:8%;z-index:0;font-size:1.5rem;opacity:.28;pointer-events:none}.home-bottom{position:relative!important}.home-bottom:before{content:'⚓';position:absolute;left:10px;top:-20px;font-size:1.6rem;opacity:.35}
-@keyframes pirateShip{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(7px) rotate(2deg)}}@keyframes pirateClouds{from{transform:translateX(-8px)}to{transform:translateX(18px)}}
-@media(max-width:950px){.home-scene .home-layout:before{font-size:4rem;right:-2%;top:24%}}@media(max-width:600px){.home-scene:before{font-size:2rem!important;letter-spacing:2.2rem!important}.home-scene:after{font-size:2.5rem!important;height:70px!important;padding-top:14px!important}.home-scene .home-layout:before{font-size:2.8rem;right:0;top:19%}.home-main:before{font-size:1rem;bottom:5%}}@media(prefers-reduced-motion:reduce){.home-scene:before,.home-scene .home-layout:before{animation:none!important}}
+/* Phase 2 — cartes centrales : plus "jeu pirate" et moins "simple bloc HTML" */
+.home-main{position:relative!important;z-index:4!important;gap:16px!important;padding:4px 2px 2px!important}
+.home-main:after{content:'⚓  ☠️  ⚓';position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);z-index:-1;font-size:1.15rem;letter-spacing:1.2rem;color:#f2c45d;opacity:.18;pointer-events:none}
+.mode-card{position:relative!important;overflow:hidden!important;min-height:350px!important;padding:13px 11px 15px!important;border:3px solid #a96827!important;border-radius:20px!important;background:linear-gradient(145deg,#fff4ca 0%,#f2d392 56%,#c98b45 100%)!important;box-shadow:inset 0 0 0 2px rgba(255,247,214,.68),inset 0 -35px 45px rgba(113,56,17,.12),0 7px 0 #63300f,0 15px 25px rgba(0,25,35,.34)!important}
+.mode-card:before{content:'';position:absolute;inset:7px;border:1px solid rgba(116,61,21,.25);border-radius:14px;pointer-events:none}
+.mode-card:after{content:'✦';position:absolute;right:10px;top:7px;font-size:1rem;color:#9a641f;opacity:.55;transform:rotate(12deg);pointer-events:none}
+.mode-card:nth-child(1){transform:rotate(-.7deg)}
+.mode-card:nth-child(2){transform:translateY(-3px)}
+.mode-card:nth-child(3){transform:rotate(.7deg)}
+.mode-card:nth-child(1):after{content:'⚓'}
+.mode-card:nth-child(2):after{content:'🗺️'}
+.mode-card:nth-child(3):after{content:'☠️'}
+.mode-card h3{position:relative;z-index:2;margin:2px 0 9px!important;font-size:1.48rem!important;letter-spacing:.02em;color:#3b1909!important;text-shadow:1px 2px 0 #fff8!important}
+.mode-art{position:relative!important;height:174px!important;margin:0 1px 2px!important;border-radius:14px!important;border:3px solid #754117!important;background:radial-gradient(circle at 50% 28%,#67d8d8 0,#1b9ca7 38%,#096b7b 72%,#043e50 100%)!important;box-shadow:inset 0 0 28px rgba(0,35,45,.58),inset 0 -12px 0 rgba(0,39,48,.18),0 4px 0 #5b2a11!important}
+.mode-art:before{content:'〰 〰 〰';position:absolute;left:8px;right:8px;bottom:5px;text-align:center;font-size:1.25rem;letter-spacing:.65rem;color:#d8f6e8;opacity:.32;pointer-events:none}
+.mode-art:after{content:'✦';position:absolute;left:12px;top:8px;color:#ffe18a;font-size:.95rem;opacity:.65;pointer-events:none}
+.mode-card p{position:relative;z-index:2;font-family:Arial,sans-serif!important;font-size:.84rem!important;line-height:1.3!important;margin:10px 6px 12px!important;min-height:44px!important;color:#4b2815!important}
+.play{position:relative;z-index:3!important;border-radius:14px!important;letter-spacing:.02em;transition:transform .15s ease,filter .15s ease!important}
+.play:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.mode-card:nth-child(1) .play{box-shadow:inset 0 1px rgba(255,255,255,.55),0 4px 0 #176c35,0 8px 12px rgba(0,0,0,.18)!important}
+.mode-card:nth-child(2) .play{box-shadow:inset 0 1px rgba(255,255,255,.55),0 4px 0 #075b84,0 8px 12px rgba(0,0,0,.18)!important}
+.mode-card:nth-child(3) .play{box-shadow:inset 0 1px rgba(255,255,255,.55),0 4px 0 #7e171d,0 8px 12px rgba(0,0,0,.18)!important}
+/* Rail droit : aspect parchemin / contrat pirate */
+.right-rail{position:relative!important;z-index:4!important}
+.promo{position:relative!important;overflow:hidden!important;border-color:#a96827!important;background:linear-gradient(145deg,#fff3c7,#e9c277 72%,#c38a45)!important;box-shadow:inset 0 0 0 2px rgba(255,247,214,.7),inset 0 -25px 35px rgba(116,60,18,.12),0 6px 0 #63300f,0 14px 22px rgba(0,25,35,.3)!important}
+.promo:before{content:'⚓';position:absolute;right:8px;top:5px;font-size:1rem;color:#81501e;opacity:.35;transform:rotate(15deg);pointer-events:none}
+.promo h3{position:relative;z-index:2;text-shadow:1px 1px #fff8}
+.promo-art{height:110px!important;border:3px solid #754117!important;box-shadow:inset 0 0 28px rgba(0,35,45,.55),0 4px 0 #5b2a11!important}
+/* Les boutons de navigation deviennent des plaques de pont */
+.side-btn,.bottom-btn{box-shadow:inset 0 1px rgba(255,255,255,.48),inset 0 -10px 18px rgba(20,5,0,.12),0 6px 0 #63300f,0 12px 20px rgba(0,25,35,.28)!important}
+.side-btn.active,.side-btn:hover{filter:brightness(1.08);transform:translateY(-2px)!important}
+.bottom-btn{min-width:140px!important}
+.home-main:before{content:'🐚   🐠   🐚';position:absolute;left:2%;bottom:8%;z-index:0;font-size:1.5rem;opacity:.28;pointer-events:none}
+.home-bottom{position:relative!important}.home-bottom:before{content:'⚓';position:absolute;left:10px;top:-20px;font-size:1.6rem;opacity:.35}
+@keyframes pirateShip{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(7px) rotate(2deg)}}
+@keyframes pirateClouds{from{transform:translateX(-8px)}to{transform:translateX(18px)}}
+@media(max-width:950px){.home-scene .home-layout:before{font-size:4rem;right:-2%;top:24%}.mode-card{min-height:330px!important}.mode-art{height:155px!important}}
+@media(max-width:600px){.home-scene:before{font-size:2rem!important;letter-spacing:2.2rem!important}.home-scene:after{font-size:2.5rem!important;height:70px!important;padding-top:14px!important}.home-scene .home-layout:before{font-size:2.8rem;right:0;top:19%}.home-main:before{font-size:1rem;bottom:5%}.home-main{gap:10px!important}.mode-card{min-height:315px!important;padding:10px 8px 12px!important}.mode-card:nth-child(1),.mode-card:nth-child(2),.mode-card:nth-child(3){transform:none}.mode-art{height:135px!important;font-size:3.8rem!important}.mode-card h3{font-size:1.15rem!important}.mode-card p{font-size:.72rem!important;margin:7px 2px 9px!important}.play{padding:8px!important;font-size:.88rem!important}.bottom-btn{min-width:120px!important}}
+@media(prefers-reduced-motion:reduce){.home-scene:before,.home-scene .home-layout:before{animation:none!important}.play{transition:none!important}}
