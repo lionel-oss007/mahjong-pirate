@@ -5,14 +5,20 @@
     if(!document.querySelector('link[data-pirate-final-css]')){
       const css=document.createElement('link');
       css.rel='stylesheet';
-      css.href='game-home-redesign.css?v=20260909-2';
+      css.href='game-home-redesign.css?v=20260909-3';
       css.dataset.pirateFinalCss='1';
       document.head.appendChild(css);
     }
     if(!document.querySelector('script[data-pirate-final-home]')){
       const script=document.createElement('script');
-      script.src='home-final.js?v=20260909-1';
+      script.src='home-final.js?v=20260909-2';
       script.dataset.pirateFinalHome='1';
+      document.body.appendChild(script);
+    }
+    if(!document.querySelector('script[data-pirate-map-enhancer]')){
+      const script=document.createElement('script');
+      script.src='map-enhancer.js?v=20260909-1';
+      script.dataset.pirateMapEnhancer='1';
       document.body.appendChild(script);
     }
   }
