@@ -1,0 +1,83 @@
+/* Mahjong Pirate — accueil façon vraie application mobile.
+   Cette couche ne touche ni au moteur, ni aux règles, ni aux données. */
+
+/* Fond = scène de jeu, pas page de tableau de bord. */
+body.home-game-mode{background:linear-gradient(180deg,#0a91a3 0%,#087285 42%,#06495c 100%)!important}
+body.home-game-mode .shell{max-width:1180px!important;padding-top:5px!important}
+body.home-game-mode .captain-card{display:none!important}
+body.home-game-mode #missionsPanel{display:none!important}
+
+/* HUD supérieur */
+.mobile-captain{display:none;align-items:center;gap:7px;min-width:0;color:#ffe9ad;cursor:pointer}
+.mobile-captain .mc-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#c98b38,#51240f);border:2px solid #e5b957;box-shadow:0 3px 0 #241007;font-size:1.15rem}
+.mobile-captain .mc-info{line-height:1.05;min-width:55px}.mobile-captain small{display:block;font-size:.52rem;color:#dcbf82;font-weight:900}.mobile-captain b{display:block;font-size:.72rem}.mobile-captain .mc-xp{height:4px;width:54px;margin-top:3px;border-radius:5px;background:#211007;overflow:hidden}.mobile-captain .mc-xp i{display:block;height:100%;width:65%;background:#e9c75d}
+.mobile-hud-actions{display:none;gap:4px}.mobile-hud-btn{width:35px;height:35px;border:2px solid #b97a2c;border-radius:50%;background:linear-gradient(#74401d,#32150a);color:#ffe8ad;box-shadow:0 3px 0 #1f0b05;font-size:1rem;cursor:pointer}
+
+/* La scène devient une carte pirate */
+body.home-game-mode .home-scene{min-height:calc(100vh - 74px)!important;border:0!important;border-radius:0!important;background:
+ radial-gradient(ellipse at 18% 15%,#8ce1e655 0 7%,transparent 28%),
+ radial-gradient(ellipse at 82% 11%,#d4f5e933 0 5%,transparent 25%),
+ linear-gradient(180deg,#1593a5 0%,#087b8b 44%,#086a7a 63%,#07596a 100%)!important;
+ box-shadow:none!important;padding:0 12px 28px!important;overflow:hidden!important}
+body.home-game-mode .home-scene:after{content:''!important;height:105px!important;background:linear-gradient(transparent,#033d4dcc)!important;z-index:1!important}
+body.home-game-mode .home-scene:before{content:'☁️                 ☁️'!important;left:5%!important;top:30px!important;letter-spacing:4rem!important;font-size:2.8rem!important;opacity:.24!important;z-index:0!important}
+
+/* Soleil, bateau, palmiers et vagues : éléments de décor discrets */
+body.home-game-mode .home-scene .home-layout:before{content:'☀️';position:absolute;right:7%;top:8px;font-size:3rem;filter:drop-shadow(0 4px 4px #00384655);opacity:.78;z-index:0}
+body.home-game-mode .home-scene .home-layout:after{content:'🌴                         🚢                         🌴';position:absolute;left:-4%;right:-4%;bottom:28px;text-align:center;font-size:4rem;letter-spacing:.3rem;white-space:pre;opacity:.82;filter:drop-shadow(0 5px 4px #002a3566);z-index:1;pointer-events:none}
+
+/* Logo = enseigne du jeu */
+body.home-game-mode .logo{width:min(440px,72%)!important;margin:10px auto 8px!important;padding:6px 16px 8px!important;border:3px solid #7a451e!important;border-radius:17px!important;transform:rotate(-1deg)!important;box-shadow:0 5px 0 #32170c,0 11px 20px #001b2588!important;z-index:4!important}
+body.home-game-mode .logo h2{font-size:clamp(2rem,4.4vw,3.4rem)!important}
+body.home-game-mode .logo .wheel{font-size:1.45rem!important}.logo strong{letter-spacing:.16em}
+
+/* Zone centrale : vraie carte de sélection */
+body.home-game-mode .home-layout{display:block!important;position:relative!important;z-index:3!important;max-width:920px;margin:0 auto!important}
+body.home-game-mode .home-main{display:grid!important;grid-template-columns:1.15fr .85fr .85fr!important;gap:8px!important;align-items:end!important;position:relative;z-index:5}
+body.home-game-mode .mode-card{min-height:0!important;height:275px!important;padding:7px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;display:flex!important;justify-content:flex-end!important;position:relative!important;overflow:visible!important}
+body.home-game-mode .mode-card:before{content:'';position:absolute;inset:18px 2px 35px;border-radius:47% 53% 48% 52%/54% 48% 52% 46%;background:radial-gradient(circle at 35% 25%,#fff3b5,#e8b85e 55%,#9b6428 100%);border:4px solid #d59a3c;box-shadow:inset 0 0 0 3px #fff1a255,0 7px 0 #4b2412,0 12px 17px #00222d88;transform:rotate(-2deg);z-index:-1}
+body.home-game-mode .mode-card:nth-child(2):before{transform:rotate(3deg);background:radial-gradient(circle at 35% 20%,#ffeeb0,#d8a14b 60%,#805020)}
+body.home-game-mode .mode-card:nth-child(3):before{transform:rotate(-4deg);background:radial-gradient(circle at 55% 20%,#ffeeb5,#d5a04d 60%,#7c4c20)}
+body.home-game-mode .mode-card h3{font-size:1.2rem!important;margin:0 0 3px!important;position:relative;z-index:2;color:#4a2412!important;text-shadow:1px 1px #fff8}
+body.home-game-mode .mode-art{height:122px!important;margin:0 10px;border:0!important;background:transparent!important;box-shadow:none!important;font-size:4rem!important;position:relative;z-index:2}
+body.home-game-mode .mode-card p{font-size:.68rem!important;line-height:1.15!important;min-height:32px!important;margin:2px 8px 5px!important;position:relative;z-index:2;color:#4d301b}
+body.home-game-mode .play{min-height:39px!important;padding:6px 10px!important;border:2px solid #8e4e1d!important;border-radius:12px!important;font-size:.78rem!important;position:relative;z-index:4;box-shadow:inset 0 1px #fff6,0 4px 0 #4c1c0b!important}
+body.home-game-mode .mode-card:first-child .play{background:linear-gradient(#34d966,#07873d)!important}
+
+/* Petit chemin lumineux entre les îles */
+body.home-game-mode .home-main:before{content:'✦ 〰〰〰 ✦ 〰〰〰 ✦';position:absolute;left:10%;right:10%;bottom:8px;text-align:center;color:#ffe17a;font-size:1.15rem;letter-spacing:.15rem;text-shadow:0 2px 4px #002d3c;opacity:.8;z-index:1;pointer-events:none}
+
+/* Défi du jour et événements = panneaux flottants */
+body.home-game-mode .right-rail{display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px!important;max-width:620px;margin:8px auto 0!important;position:relative;z-index:7}
+body.home-game-mode .promo{padding:7px!important;border:2px solid #c58b35!important;border-radius:15px!important;background:linear-gradient(145deg,#fff0b5,#d9a75a)!important;box-shadow:0 4px 0 #613515,0 7px 14px #00202b77!important}
+body.home-game-mode .promo h3{font-size:.88rem!important;margin:0 0 3px!important}.promo-art{height:65px!important;font-size:2.3rem!important}.promo p{font-size:.6rem!important;margin:4px!important}.promo .play{min-height:34px!important;font-size:.7rem!important}
+
+/* Navigation : barre de jeu, pas menu latéral */
+body.home-game-mode .side-menu{position:fixed!important;left:50%!important;bottom:7px!important;transform:translateX(-50%)!important;width:min(620px,calc(100% - 12px))!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:4px!important;padding:5px!important;background:linear-gradient(180deg,#70401e,#2b1208)!important;border:2px solid #c98b36!important;border-radius:17px!important;box-shadow:0 -4px 20px #00172299,0 7px 16px #000b!important;z-index:100!important}
+body.home-game-mode .side-btn{min-height:50px!important;padding:3px 2px!important;border:1px solid #a96c28!important;border-radius:11px!important;background:transparent!important;box-shadow:none!important;font-size:.55rem!important;text-shadow:1px 1px #180903!important}
+body.home-game-mode .side-btn span{font-size:1.25rem!important;margin:0 0 1px!important}.side-btn.active{background:linear-gradient(#d99536,#704019)!important;box-shadow:inset 0 1px #fff6,0 0 0 1px #ffd86a!important}
+
+/* Desktop : conserver une composition de jeu centrée */
+@media(min-width:701px){body.home-game-mode .mobile-captain{display:flex}.topbar .brand{display:none!important}.topbar{justify-content:space-between!important}.mobile-hud-actions{display:flex}.wallet{margin-left:auto;margin-right:10px}.captain-card{display:none!important}body.home-game-mode .side-menu{position:fixed!important;left:14px!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;width:118px!important;display:flex!important;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}body.home-game-mode .side-btn{min-height:54px!important}.right-rail{grid-template-columns:1fr 1fr!important}}
+
+/* Mobile portrait : la carte respire et les îles restent toutes visibles */
+@media(max-width:700px){
+ body.home-game-mode .shell{padding:0 4px 70px!important}
+ body.home-game-mode .home-scene{min-height:calc(100dvh - 54px)!important;padding:0 6px 72px!important}
+ body.home-game-mode .home-scene .home-layout:before{top:2px;right:4%;font-size:2rem}
+ body.home-game-mode .home-scene .home-layout:after{bottom:48px;font-size:2.15rem;letter-spacing:0}
+ body.home-game-mode .logo{width:76%!important;max-width:315px!important;margin:4px auto 5px!important;padding:4px 8px 5px!important}
+ body.home-game-mode .logo h2{font-size:1.65rem!important}.logo .wheel{font-size:1rem!important}.logo strong{font-size:.62rem!important;padding:1px 13px!important}
+ body.home-game-mode .home-main{grid-template-columns:1.25fr .9fr .9fr!important;gap:2px!important;align-items:end!important}
+ body.home-game-mode .mode-card{height:225px!important;padding:4px!important}
+ body.home-game-mode .mode-card:before{inset:15px 0 28px;border-width:3px!important}
+ body.home-game-mode .mode-card h3{font-size:.82rem!important;margin:0!important}.mode-art{height:90px!important;font-size:2.75rem!important;margin:0 4px!important}
+ body.home-game-mode .mode-card p{font-size:.5rem!important;min-height:26px!important;margin:1px 2px 3px!important}
+ body.home-game-mode .play{min-height:31px!important;padding:4px 4px!important;font-size:.61rem!important;border-radius:9px!important}
+ body.home-game-mode .home-main:before{font-size:.72rem;bottom:1px;letter-spacing:0}
+ body.home-game-mode .right-rail{gap:5px!important;margin:2px auto 0!important;max-width:none!important}
+ body.home-game-mode .promo{padding:4px!important;border-radius:11px!important}.promo h3{font-size:.67rem!important}.promo-art{height:48px!important;font-size:1.65rem!important}.promo p{font-size:.48rem!important;margin:2px!important}.promo .play{min-height:28px!important;font-size:.58rem!important}
+ .mobile-captain{display:flex}.topbar .brand{display:none!important}.mobile-hud-actions{display:flex}.wallet{gap:3px!important;margin-left:auto}.wallet span{min-width:50px!important;font-size:.58rem!important;padding:4px 4px!important}
+}
+@media(max-width:390px){body.home-game-mode .home-main{grid-template-columns:1.2fr .9fr .9fr!important}.mobile-captain .mc-info{display:none}.mobile-captain .mc-avatar{width:31px;height:31px}.wallet span{min-width:46px!important;font-size:.53rem!important}.home-game-mode .logo{width:82%!important}.home-game-mode .mode-card{height:214px!important}.home-game-mode .mode-art{height:82px!important;font-size:2.45rem!important}}
+@media(prefers-reduced-motion:reduce){.mode-card:before{transition:none!important}}
