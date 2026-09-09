@@ -1,0 +1,46 @@
+/* Mahjong Pirate — véritable écran d'accueil de jeu */
+body.mobile-game-shell{background:#063d4e!important}
+body.home-game-mode .captain-card,body.home-game-mode #arsenalPanel,body.home-game-mode #missionsPanel{display:none!important}
+body.home-game-mode .shell{padding-top:6px!important}
+body.home-game-mode #home{margin-top:0!important}
+body.home-game-mode .home-scene{position:relative;min-height:calc(100vh - 76px)!important;padding:10px 18px 82px!important;overflow:hidden!important;border:0!important;border-radius:0!important;background:radial-gradient(circle at 72% 17%,#ffe49a44 0 7%,transparent 8%),linear-gradient(180deg,#25a2ae 0%,#0c7787 43%,#075366 70%,#043b4d 100%)!important;box-shadow:inset 0 -130px 100px #002d3bcc!important}
+body.home-game-mode .home-scene:before{content:'☁️　　　　　　☁️'!important;top:5%!important;left:4%!important;width:92%!important;font-size:3rem!important;opacity:.28!important;letter-spacing:2rem!important;z-index:1!important}
+body.home-game-mode .home-scene:after{content:'🌴　　　〰️〰️〰️　　　🚢　　　〰️〰️〰️　　　🌴'!important;bottom:0!important;height:100px!important;padding:20px 0 0!important;font-size:3rem!important;background:linear-gradient(transparent,#032e3bee)!important;z-index:2!important}
+body.home-game-mode .game-home-hud{position:relative!important;z-index:20!important;width:min(760px,100%)!important;margin:0 auto 8px!important;border:2px solid #e0ad50!important;border-radius:18px!important;background:linear-gradient(180deg,#6d3d1cdd,#281008ee)!important;box-shadow:0 5px 0 #291107,0 10px 25px #00141dcc!important}
+body.home-game-mode .logo{position:relative!important;z-index:12!important;width:min(420px,72%)!important;margin:3px auto 10px!important;background:linear-gradient(145deg,#895025,#3b190c)!important;border:3px solid #e0ad50!important;border-radius:20px!important;box-shadow:0 6px 0 #291107,0 13px 25px #00131aaa!important;transform:rotate(-1deg)!important}
+body.home-game-mode .game-home-kicker{position:relative!important;z-index:12!important;font-size:.62rem!important;margin:3px auto 2px!important;color:#ffe19a!important}
+/* La page devient une carte de navigation : plus de grille de site. */
+body.home-game-mode .home-layout{position:relative!important;z-index:10!important;display:block!important;width:min(900px,100%)!important;margin:0 auto!important}
+body.home-game-mode .side-menu{position:absolute!important;left:0!important;top:112px!important;z-index:30!important;width:78px!important;display:flex!important;flex-direction:column!important;gap:5px!important;padding:5px!important;border:2px solid #c88c38!important;border-radius:16px!important;background:#3a1a0cf2!important;box-shadow:0 8px 20px #00141d99!important}
+body.home-game-mode .side-btn{min-height:51px!important;padding:4px 2px!important;border:1px solid #c58b3b!important;border-radius:10px!important;font-size:.58rem!important;box-shadow:0 3px 0 #1d0b05!important}
+body.home-game-mode .home-main{display:flex!important;align-items:flex-end!important;justify-content:center!important;gap:18px!important;width:100%!important;padding:4px 40px 0 100px!important}
+body.home-game-mode .mode-card{position:relative!important;min-height:225px!important;width:180px!important;padding:8px!important;border:3px solid #c98a35!important;border-radius:28px 28px 35px 35px!important;background:linear-gradient(145deg,#fff0b9,#e6b969)!important;box-shadow:inset 0 0 0 2px #fff7d0,0 7px 0 #6d3718,0 14px 22px #001923aa!important;transform:rotate(-2deg)!important}
+body.home-game-mode .mode-card:nth-child(2){transform:translateY(-20px) rotate(1deg)!important}.home-game-mode .mode-card:nth-child(3){transform:rotate(2deg)!important}
+body.home-game-mode .mode-card:nth-child(1){width:205px!important;min-height:255px!important}
+body.home-game-mode .mode-art{height:125px!important;border:0!important;border-radius:50%!important;background:radial-gradient(circle at 50% 35%,#51c8cf,#087486 70%)!important;box-shadow:inset 0 0 25px #003b48,0 4px 0 #6d3818!important}
+body.home-game-mode .mode-card:nth-child(1) .mode-art{height:150px!important}
+body.home-game-mode .mode-card h3{font-size:1.12rem!important;margin:5px 0!important}.home-game-mode .mode-card p{font-size:.68rem!important;margin:5px 2px!important;min-height:28px!important}
+body.home-game-mode .mode-card .play{min-height:38px!important;border-radius:20px!important;font-size:.78rem!important;box-shadow:inset 0 1px #fff7,0 4px 0 #075b31!important}
+body.home-game-mode .right-rail{position:absolute!important;right:0!important;top:112px!important;width:145px!important;display:flex!important;flex-direction:column!important;gap:8px!important}
+body.home-game-mode .promo{padding:7px!important;border:2px solid #c98a35!important;border-radius:18px!important;background:linear-gradient(145deg,#fff0bb,#e4b563)!important;box-shadow:0 5px 0 #713b19,0 9px 15px #00192388!important}
+body.home-game-mode .promo-art{height:65px!important;border-radius:13px!important;font-size:2.2rem!important}.home-game-mode .promo h3{font-size:.82rem!important}.home-game-mode .promo p{font-size:.56rem!important}
+body.home-game-mode .home-bottom{display:flex!important;justify-content:center!important;gap:10px!important;position:relative!important;z-index:20!important;margin:12px auto 0!important}
+body.home-game-mode .bottom-btn{min-width:120px!important;border-radius:18px!important;background:linear-gradient(#77421e,#35170b)!important;color:#ffe9af!important;border:2px solid #c98b39!important;box-shadow:0 4px 0 #1d0b05!important}
+/* Le tiroir contient les anciennes fonctions sans polluer l'écran de jeu. */
+.mobile-captain-drawer{position:fixed;inset:0;z-index:1000;display:none;background:#00141dcc;backdrop-filter:blur(4px);padding:72px 10px 10px;overflow:auto}
+.mobile-captain-drawer.open{display:block}.mobile-drawer-card{width:min(760px,100%);margin:0 auto;padding:10px;border:3px solid #c88b38;border-radius:20px;background:linear-gradient(#f8e4af,#d7a85e);box-shadow:0 15px 40px #000b}.mobile-drawer-close{position:sticky;top:0;float:right;z-index:2;border:2px solid #d5a046;border-radius:50%;width:40px;height:40px;background:#4a2310;color:#ffe7a8;font-size:1.2rem;font-weight:900}.mobile-captain-drawer .captain-card,.mobile-captain-drawer #arsenalPanel,.mobile-captain-drawer #missionsPanel{display:block!important;max-width:none!important;margin:0 0 10px!important}.mobile-captain-drawer .captain-card{box-shadow:none!important}.mobile-captain-drawer #arsenalPanel,.mobile-captain-drawer #missionsPanel{box-shadow:none!important}
+@media(max-width:700px){
+ body.home-game-mode .home-scene{min-height:calc(100dvh - 56px)!important;padding:4px 6px 76px!important}
+ body.home-game-mode .game-home-hud{margin-bottom:4px!important;border-radius:13px!important}
+ body.home-game-mode .logo{width:86%!important;max-width:320px!important;margin:0 auto 5px!important;border-radius:15px!important}.home-game-mode .logo h2{font-size:1.55rem!important}
+ body.home-game-mode .home-layout{width:100%!important}.home-game-mode .side-menu{position:fixed!important;left:4px!important;right:4px!important;top:auto!important;bottom:4px!important;width:auto!important;flex-direction:row!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:3px!important;padding:3px!important;border-radius:14px!important;z-index:200!important}
+ body.home-game-mode .side-btn{min-height:51px!important;font-size:.46rem!important}.home-game-mode .side-btn span{font-size:1.05rem!important}
+ body.home-game-mode .home-main{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important;padding:2px 8px!important;align-items:end!important}
+ body.home-game-mode .mode-card,.home-game-mode .mode-card:nth-child(1),.home-game-mode .mode-card:nth-child(2),.home-game-mode .mode-card:nth-child(3){width:auto!important;min-height:0!important;padding:6px!important;border-radius:21px!important;transform:none!important}
+ body.home-game-mode .mode-card:nth-child(1){grid-column:1 / -1;min-height:180px!important}.home-game-mode .mode-card:nth-child(n+2){display:block!important;min-height:145px!important}
+ body.home-game-mode .mode-card:nth-child(n+2) .mode-art{height:72px!important;font-size:2.2rem!important}.home-game-mode .mode-card:nth-child(1) .mode-art{height:92px!important}.home-game-mode .mode-card h3{font-size:.9rem!important}.home-game-mode .mode-card p{display:none!important}.home-game-mode .mode-card .play{min-height:35px!important;font-size:.7rem!important}
+ body.home-game-mode .right-rail{position:relative!important;right:auto!important;top:auto!important;width:100%!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important;margin-top:7px!important;padding:0 8px!important}.home-game-mode .promo{border-radius:14px!important}.home-game-mode .promo-art{height:48px!important;font-size:1.8rem!important}
+ body.home-game-mode .home-bottom{display:none!important}
+ .mobile-captain-drawer{padding:58px 6px 10px}.mobile-drawer-card{border-radius:16px;padding:7px}
+}
+@media(min-width:701px){.mobile-game-shell .mobile-captain-drawer{padding-top:90px}}
