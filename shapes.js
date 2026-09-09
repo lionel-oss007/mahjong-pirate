@@ -32,4 +32,10 @@
     homeCss.dataset.mobileHomeUi = '1';
     document.head.appendChild(homeCss);
   }
+  if (!document.querySelector('script[data-mobile-home-ui]')) {
+    var script = document.createElement('script');
+    script.src = 'mobile-home-ui.js?v=20260909-2';
+    script.dataset.mobileHomeUi = '1';
+    document.head.appendChild(script);
+  }
 })();
