@@ -1,0 +1,43 @@
+/* Mahjong Pirate — interface de jeu mobile
+   Couche visuelle uniquement : aucun changement au moteur de jeu. */
+:root{--mg-gold:#f6ce63;--mg-paper:#ffe9b0;--mg-wood:#5a2b12;--mg-wood-dark:#2d1308;--mg-sea:#075b70}
+
+/* Le jeu doit ressembler à une app : HUD compact, zones lisibles, actions tactiles. */
+.topbar{height:64px!important;padding:6px 14px!important;border-bottom-width:3px!important;box-shadow:0 4px 14px #0009!important}
+.topbar .brand{font-size:1.2rem!important}
+.wallet{gap:6px!important}.wallet span{min-width:82px!important;padding:6px 9px!important;font-size:.82rem!important;border-radius:11px!important}
+.shell{max-width:1180px!important;padding:10px 12px 18px!important}
+.captain-card{max-width:330px!important;padding:7px 11px!important;margin-bottom:8px!important;border-width:2px!important;border-radius:13px!important}
+
+.home-scene{min-height:calc(100vh - 100px)!important;padding:8px 12px 15px!important;border-radius:22px!important}
+.logo{width:min(500px,78%)!important;padding:7px 14px 10px!important;margin:2px auto 10px!important;border-width:4px!important;border-radius:16px!important}
+.logo .wheel{font-size:1.7rem!important}.logo h2{font-size:clamp(1.9rem,4.7vw,3.3rem)!important}.logo strong{padding:3px 24px!important;font-size:clamp(.8rem,2vw,1.2rem)!important}
+
+.home-layout{grid-template-columns:118px 1fr 205px!important;gap:10px!important}
+.side-menu{gap:6px!important}.side-btn{min-height:58px!important;padding:7px 5px!important;border-width:2px!important;border-radius:12px!important;font-size:.72rem!important;box-shadow:inset 0 1px #fff4,0 4px 0 #2b1108,0 7px 12px #00192377!important}.side-btn span{font-size:1.25rem!important}
+.home-main{gap:9px!important}.mode-card{min-height:305px!important;padding:8px!important;border-width:2px!important;border-radius:15px!important;box-shadow:inset 0 0 0 1px #fff7d899,0 5px 0 #744018,0 9px 16px #001a2488!important}.mode-card h3{font-size:1.22rem!important;margin:2px 0 6px!important}.mode-art{height:145px!important;font-size:3.9rem!important;border-width:2px!important}.mode-card p{font-size:.75rem!important;margin:7px 3px 8px!important;min-height:36px!important}.play{min-height:43px!important;padding:8px!important;border-width:2px!important;font-size:.88rem!important;border-radius:11px!important}
+.right-rail{gap:8px!important}.promo{padding:8px!important;border-width:2px!important;border-radius:14px!important}.promo h3{font-size:1.05rem!important}.promo-art{height:86px!important;font-size:2.8rem!important}
+.home-bottom{gap:7px!important;margin-top:9px!important}.bottom-btn{min-width:112px!important;min-height:42px!important;padding:7px 10px!important;font-size:.76rem!important;border-width:2px!important;border-radius:11px!important}
+
+/* HUD du mode de jeu : boutons ronds et informations compactes */
+.game-panel{padding:10px!important;border-radius:17px!important}.game-head h2{font-size:1.15rem!important}.game-head .eyebrow{font-size:.68rem!important}.hud{gap:5px!important;margin:7px auto!important}.hud div{padding:5px 3px!important;border-width:1px!important;border-radius:8px!important}.hud small{font-size:.55rem!important}.hud b{font-size:.78rem!important}.actions button{min-height:42px!important;border-radius:12px!important;padding:7px 10px!important}.boosters{gap:10px!important}.boosters button{width:62px!important;height:62px!important}
+
+/* Mobile réel : une seule colonne, navigation basse, cartes larges et tactiles. */
+@media(max-width:700px){
+ body{padding-bottom:0!important}.topbar{height:56px!important;padding:5px 8px!important}.topbar .brand{font-size:1rem!important}.wallet span{min-width:62px!important;padding:5px 6px!important;font-size:.68rem!important}
+ .shell{padding:6px 6px 78px!important}.captain-card{max-width:none!important;margin-bottom:6px!important}
+ .home-scene{min-height:calc(100vh - 70px)!important;padding:7px 7px 75px!important;border-radius:17px!important}
+ .logo{width:94%!important;margin:0 auto 8px!important}.logo .wheel{font-size:1.35rem!important}.logo h2{font-size:2rem!important}.logo strong{padding:2px 18px!important;font-size:.82rem!important}
+ .home-layout{display:flex!important;flex-direction:column!important;gap:9px!important}
+ .side-menu{order:3!important;width:100%!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:5px!important;position:fixed!important;left:6px!important;right:6px!important;bottom:6px!important;z-index:20!important;padding:5px!important;border:2px solid #b9782e!important;border-radius:15px!important;background:linear-gradient(#6f3c1b,#30150a)!important;box-shadow:0 8px 22px #000b!important}
+ .side-btn{min-height:54px!important;padding:4px 2px!important;border:1px solid #d09a43!important;border-radius:10px!important;font-size:.56rem!important;box-shadow:0 2px 0 #211007!important}.side-btn span{font-size:1.2rem!important;margin:0!important}
+ .home-main{order:1!important;display:grid!important;grid-template-columns:1fr!important;gap:8px!important;width:100%!important}.mode-card,.mode-card:nth-child(1),.mode-card:nth-child(2),.mode-card:nth-child(3){transform:none!important;min-height:0!important;padding:9px!important}.mode-card:nth-child(n+2){display:none!important}.mode-card h3{font-size:1.25rem!important}.mode-art{height:155px!important}.mode-card p{font-size:.76rem!important}.play{min-height:46px!important;font-size:.92rem!important}
+ .right-rail{order:2!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important;width:100%!important}.promo{padding:7px!important}.promo h3{font-size:.9rem!important}.promo-art{height:78px!important;font-size:2.4rem!important}.promo p{font-size:.64rem!important}
+ .home-bottom{display:none!important}
+ .home-scene:after{font-size:2rem!important;height:55px!important}
+ .home-scene .home-layout:before{font-size:2rem!important;top:-55px!important}
+}
+
+@media(max-width:390px){.wallet span{min-width:55px!important;font-size:.61rem!important}.logo h2{font-size:1.72rem!important}.side-btn{font-size:.5rem!important}.side-btn span{font-size:1.05rem!important}.right-rail{grid-template-columns:1fr!important}.right-rail .promo:nth-child(2){display:none!important}}
+
+@media(prefers-reduced-motion:reduce){.side-btn,.play{transition:none!important}}
