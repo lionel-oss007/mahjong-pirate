@@ -21,7 +21,7 @@
   if (!document.querySelector('link[data-mobile-game-ui]')) {
     var mobile = document.createElement('link');
     mobile.rel = 'stylesheet';
-    mobile.href = 'mobile-game-ui.css?v=20260909-1';
+    mobile.href = 'mobile-game-ui.css?v=20260909-2';
     mobile.dataset.mobileGameUi = '1';
     document.head.appendChild(mobile);
   }
