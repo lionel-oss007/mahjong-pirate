@@ -9,13 +9,6 @@
       css.dataset.pirateFinalCss='1';
       document.head.appendChild(css);
     }
-    if(!document.querySelector('link[data-pirate-click-fix]')){
-      const css=document.createElement('link');
-      css.rel='stylesheet';
-      css.href='home-click-fix.css?v=20260909-1';
-      css.dataset.pirateClickFix='1';
-      document.head.appendChild(css);
-    }
     if(!document.querySelector('script[data-pirate-final-home]')){
       const script=document.createElement('script');
       script.src='home-final.js?v=20260909-2';
@@ -33,6 +26,14 @@
       script.src='island-polish.js?v=20260909-1';
       script.dataset.pirateIslandPolish='1';
       document.body.appendChild(script);
+    }
+    /* Doit être chargé en dernier : island-polish/map-enhancer peuvent définir transform. */
+    if(!document.querySelector('link[data-pirate-click-fix]')){
+      const css=document.createElement('link');
+      css.rel='stylesheet';
+      css.href='home-click-fix.css?v=20260909-2';
+      css.dataset.pirateClickFix='1';
+      document.head.appendChild(css);
     }
   }
   function boot(){
