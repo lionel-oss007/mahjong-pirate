@@ -3,20 +3,31 @@
 .pgh-classic:hover,
 .pgh-classic:focus-visible,
 .pgh-classic:active {
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+  left: calc(50% - 105px) !important;
+  transform: none !important;
 }
 
-.pgh-classic:hover {
+.pgh-classic:hover,
+.pgh-classic:focus-visible,
+.pgh-classic:active {
   filter: brightness(1.08) !important;
 }
 
-.pgh-classic:active {
-  transform: translate(-50%, 3px) !important;
+@media (max-width: 700px) {
+  .pgh-classic,
+  .pgh-classic:hover,
+  .pgh-classic:focus-visible,
+  .pgh-classic:active {
+    left: calc(50% - 75px) !important;
+  }
 }
 
-/* Les autres îles gardent leur animation verticale. */
-.pgh-adventure:hover,
-.pgh-challenge:hover {
-  transform: translateY(-3px) !important;
+/* Le bouton JOUER doit rester cliquable au-dessus des décorations de la carte. */
+.pgh-play {
+  pointer-events: auto !important;
+  z-index: 50 !important;
+}
+.pgh-map::before,
+.pgh-map::after {
+  pointer-events: none !important;
 }
