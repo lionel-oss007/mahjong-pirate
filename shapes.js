@@ -11,4 +11,11 @@
     source: 'app.js',
     note: 'La géométrie jouable est pilotée exclusivement par app.js.'
   };
+  if (!document.querySelector('link[data-home-visual]')) {
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'home-visual.css?v=20260909-1';
+    link.dataset.homeVisual = '1';
+    document.head.appendChild(link);
+  }
 })();
