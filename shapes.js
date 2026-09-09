@@ -25,10 +25,11 @@
     mobile.dataset.mobileGameUi = '1';
     document.head.appendChild(mobile);
   }
-  if (!document.querySelector('script[data-mobile-home-ui]')) {
-    var script = document.createElement('script');
-    script.src = 'mobile-home-ui.js?v=20260909-1';
-    script.dataset.mobileHomeUi = '1';
-    document.head.appendChild(script);
+  if (!document.querySelector('link[data-mobile-home-ui]')) {
+    var homeCss = document.createElement('link');
+    homeCss.rel = 'stylesheet';
+    homeCss.href = 'mobile-home-ui.css?v=20260909-1';
+    homeCss.dataset.mobileHomeUi = '1';
+    document.head.appendChild(homeCss);
   }
 })();
