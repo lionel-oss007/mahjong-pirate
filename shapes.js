@@ -14,7 +14,7 @@
   if (!document.querySelector('link[data-home-visual]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'home-visual.css?v=20260909-3';
+    link.href = 'home-visual.css?v=20260909-4';
     link.dataset.homeVisual = '1';
     document.head.appendChild(link);
   }
