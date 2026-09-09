@@ -1,66 +1,44 @@
-/* Mahjong Pirate — orchestration de l'accueil façon vrai jeu mobile.
-   Aucun changement au moteur, aux règles ou aux données de partie. */
+/* Mahjong Pirate — vrai écran d'accueil de jeu.
+   Réorganise uniquement l'interface : moteur Mahjong et règles inchangés. */
 (function(){
-  function readState(){try{return JSON.parse(localStorage.getItem('mahjongPirateState')||'{}')||{}}catch(e){return{}}}
-  function boot(){
-    const top=document.querySelector('.topbar'), wallet=document.querySelector('.wallet');
-    const scene=document.querySelector('.home-scene');
-    if(!top||!wallet||!scene)return;
-    document.body.classList.add('mobile-game-shell');
-
-    /* HUD haut : profil + ressources + actions. */
-    if(!top.querySelector('.mobile-captain')){
-      const c=document.createElement('button');c.type='button';c.className='mobile-captain';
-      c.setAttribute('aria-label','Profil du capitaine');
-      c.innerHTML='<span class="mc-avatar">🏴‍☠️</span><span class="mc-info"><small>CAPITAINE</small><b id="mcLevel">Niv. 1</b><span class="mc-xp"><i id="mcXp"></i></span></span>';
-      top.insertBefore(c,top.firstChild);
-      c.onclick=()=>document.querySelector('#resetProgress')?.click();
-    }
-    if(!top.querySelector('.mobile-hud-actions')){
-      const a=document.createElement('div');a.className='mobile-hud-actions';
-      a.innerHTML='<button class="mobile-hud-btn" id="mobileMissions" type="button" aria-label="Défis">🎯</button><button class="mobile-hud-btn" id="mobileSettings" type="button" aria-label="Options">⚙️</button>';
-      top.appendChild(a);
-      a.querySelector('#mobileMissions').onclick=()=>{const b=[...document.querySelectorAll('.side-btn')].find(x=>/défi|defi/i.test(x.textContent));b?.click()};
-      a.querySelector('#mobileSettings').onclick=()=>document.querySelector('#resetProgress')?.click();
-    }
-
-    if(!scene.querySelector('.game-home-kicker')){
-      const kicker=document.createElement('div');kicker.className='game-home-kicker';kicker.innerHTML='<span>☠️</span> CARTE DES CARAÏBES <span>☠️</span>';
-      scene.querySelector('.logo')?.before(kicker);
-    }
-
-    document.querySelectorAll('.mode-card').forEach((card,i)=>{
-      card.classList.add('game-mode-'+(i+1));
-      const art=card.querySelector('.mode-art');
-      if(art&&!art.querySelector('.mode-badge')){
-        const badge=document.createElement('span');badge.className='mode-badge';badge.textContent=i===0?'▶ JOUER':i===1?'🗺️ CARTE':'⚔️ DÉFIS';art.appendChild(badge);
-      }
-    });
-
-    function refresh(){
-      const s=readState();
-      const level=Number(s.level)||1,xp=Number(s.xp)||0;
-      const coins=Number(s.coins)||0,gems=Number(s.gems)||0;
-      const l=document.getElementById('mcLevel'),bar=document.getElementById('mcXp');
-      if(l)l.textContent='Niv. '+level;
-      if(bar)bar.style.width=Math.max(8,Math.min(100,xp%100))+'%';
-      scene.querySelector('.gh-coins')?.replaceChildren(document.createTextNode(coins));
-      scene.querySelector('.gh-gems')?.replaceChildren(document.createTextNode(gems));
-    }
-    refresh();
-    window.addEventListener('storage',refresh);
-    setInterval(refresh,1200);
-    scene.classList.add('game-home-ready');
-
-    /* Le moteur masque/affiche home/map/game : on adapte seulement le shell visuel. */
-    const sync=()=>{
-      const home=document.getElementById('home'),map=document.getElementById('map'),game=document.getElementById('game');
-      document.body.classList.toggle('home-game-mode',!!home&&!home.classList.contains('hidden'));
-      document.body.classList.toggle('map-game-mode',!!map&&!map.classList.contains('hidden'));
-      document.body.classList.toggle('play-game-mode',!!game&&!game.classList.contains('hidden'));
-    };
-    sync();
-    new MutationObserver(sync).observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+ function state(){try{return JSON.parse(localStorage.getItem('mahjongPirateState')||'{}')||{}}catch(e){return{}}}
+ function boot(){
+  const scene=document.querySelector('.home-scene');if(!scene||document.body.classList.contains('pirate-home-v2'))return;
+  document.body.classList.add('pirate-home-v2');
+  const css=document.createElement('style');css.id='pirate-home-v2-css';css.textContent=`
+  body.pirate-home-v2{background:#032f3e!important;overflow-x:hidden}
+  body.pirate-home-v2 .topbar{display:none!important}body.pirate-home-v2 .shell{max-width:none!important;padding:0!important}
+  body.pirate-home-v2 .captain-card,body.pirate-home-v2 #arsenalPanel,body.pirate-home-v2 #missionsPanel{display:none!important}
+  body.pirate-home-v2 #home{min-height:100dvh!important}
+  body.pirate-home-v2 .home-scene{height:100dvh!important;min-height:100dvh!important;padding:0 14px 78px!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:linear-gradient(180deg,#1496a7 0,#0b7b8d 43%,#075c70 70%,#034458 100%)!important;overflow:hidden!important}
+  body.pirate-home-v2 .home-scene:before{content:'☁️        ☁️'!important;top:7%!important;left:4%!important;font-size:3rem!important;opacity:.3!important;letter-spacing:4rem!important}
+  body.pirate-home-v2 .home-scene:after{content:'🌴      〰️〰️〰️      🚢      〰️〰️〰️      🌴'!important;height:100px!important;padding-top:25px!important;font-size:3rem!important;background:linear-gradient(transparent,#022f40f5)!important}
+  .ph-hud{position:relative;z-index:30;height:58px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:6px 8px;background:linear-gradient(180deg,#75421f,#30150a);border-bottom:3px solid #e0b04f;box-shadow:0 5px 18px #00131acc;color:#ffe8aa}
+  .ph-profile,.ph-settings{border:2px solid #c9933e;border-radius:12px;background:linear-gradient(#895229,#44200e);color:#ffeab0;box-shadow:0 3px 0 #211006;cursor:pointer;font-weight:900}.ph-profile{display:flex;align-items:center;gap:6px;padding:4px 8px;text-align:left}.ph-avatar{font-size:1.35rem}.ph-ptext{display:flex;flex-direction:column;line-height:1.05}.ph-ptext b{font-size:.7rem}.ph-ptext small{font-size:.5rem;opacity:.8}.ph-res{display:flex;justify-content:center;gap:6px}.ph-res span{min-width:68px;padding:5px 7px;border:1px solid #c9933e;border-radius:9px;background:#241008;color:#ffe8a5;text-align:center;font:900 .68rem Arial}.ph-settings{width:36px;height:36px;font-size:1rem}
+  .ph-title{position:relative;z-index:12;text-align:center;margin:7px auto 2px;color:#ffe08a;font:900 .58rem Arial;letter-spacing:.18em;text-shadow:0 2px #321508}
+  body.pirate-home-v2 .logo{width:min(400px,68%)!important;margin:0 auto 8px!important;padding:5px 10px 7px!important;border:3px solid #704018!important;border-radius:14px!important;box-shadow:0 6px 0 #2b1208,0 10px 24px #001923aa!important;transform:rotate(-.5deg)!important}.logo h2{font-size:clamp(1.8rem,4.2vw,3rem)!important;line-height:1!important}.logo strong{font-size:.72rem!important;padding:2px 20px!important}.logo .wheel{font-size:1.3rem!important}
+  .ph-map{position:relative;z-index:10;width:min(1060px,100%);height:calc(100dvh - 170px);min-height:390px;margin:0 auto;border:3px solid #9f692a;border-radius:38px;background:radial-gradient(ellipse at 50% 48%,#1aa1aa 0 13%,transparent 14%),radial-gradient(ellipse at 20% 28%,#37b5b5 0 8%,transparent 9%),radial-gradient(ellipse at 78% 72%,#188e9b 0 10%,transparent 11%),linear-gradient(145deg,#15919e,#086b7b 58%,#075468);box-shadow:inset 0 0 55px #003745aa,0 10px 28px #00192399;overflow:hidden}
+  .ph-map:before{content:'✦      ✧             ✦                 ✧      ✦';position:absolute;inset:14px;color:#d0f6ed55;font-size:1.2rem;letter-spacing:1.5rem;pointer-events:none}.ph-map:after{content:'〰️〰️〰️       〰️〰️       〰️〰️〰️';position:absolute;left:0;right:0;bottom:15%;text-align:center;font-size:1.4rem;opacity:.32}
+  .ph-island{position:absolute;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;width:150px;height:122px;border:3px solid #b97b30;border-radius:50%;background:radial-gradient(ellipse at 50% 35%,#ffe8a4,#d5a254 75%,#9e6428);box-shadow:inset 0 0 0 3px #fff2b255,0 8px 0 #633517,0 13px 20px #001a2488;color:#482313;text-align:center;cursor:pointer;transition:.18s transform,.18s filter}.ph-island:hover{transform:translateY(-4px) scale(1.03);filter:brightness(1.07)}.ph-island.main{left:50%;top:29%;transform:translateX(-50%);width:205px;height:160px;box-shadow:0 0 0 5px #f4d36c55,inset 0 0 0 3px #fff3a666,0 10px 0 #633517,0 18px 28px #001a2499}.ph-island.adventure{left:11%;top:54%}.ph-island.challenge{right:11%;top:56%}.ph-island .e{font-size:2.7rem;filter:drop-shadow(2px 4px 2px #553019)}.ph-island.main .e{font-size:3.5rem}.ph-island b{font-size:1rem}.ph-island.main b{font-size:1.3rem}.ph-island small{font:900 .57rem Arial;margin-top:2px}.ph-star{position:absolute;z-index:6;left:50%;top:17%;transform:translateX(-50%);font-size:1.55rem}.ph-play{position:absolute;z-index:8;left:50%;top:58%;transform:translateX(-50%);min-width:155px;padding:9px 18px;border:3px solid #b96d20;border-radius:14px;background:linear-gradient(#35dc6b,#078b40);color:#fff;font:900 .9rem Arial;text-shadow:1px 2px #4a1b0b;box-shadow:inset 0 1px #fff7,0 5px 0 #55200d,0 9px 15px #00192388;cursor:pointer}.ph-play:active{transform:translate(-50%,4px)}
+  .ph-mini{position:absolute;z-index:8;padding:6px 10px;border:2px solid #c68a36;border-radius:11px;background:#32170de8;color:#ffe5a0;font:900 .63rem Arial;box-shadow:0 4px 0 #1e0b05;cursor:pointer}.ph-mini.daily{right:16px;top:16px}.ph-mini.missions{left:16px;top:16px}.ph-mini.arsenal{left:16px;bottom:16px}.ph-mini.events{right:16px;bottom:16px}
+  .ph-bottom{position:fixed;z-index:100;left:8px;right:8px;bottom:8px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:4px;border:2px solid #c88b37;border-radius:15px;background:linear-gradient(#673918f5,#271008f7);box-shadow:0 8px 24px #000b;backdrop-filter:blur(7px)}.ph-tab{border:1px solid #a96d2b;border-radius:10px;background:transparent;color:#ffe7a8;padding:5px 2px;font:900 .5rem Arial;cursor:pointer}.ph-tab span{display:block;font-size:1.1rem;margin-bottom:2px}.ph-tab.active{background:linear-gradient(#d58c34,#6e3917);box-shadow:0 0 0 1px #f2cd65,0 3px 0 #281006}
+  .ph-drawer{position:fixed;inset:0;z-index:200;display:none;background:#00131bcc;backdrop-filter:blur(5px)}.ph-drawer.open{display:block}.ph-panel{position:absolute;right:0;top:0;bottom:0;width:min(520px,95vw);overflow:auto;padding:60px 12px 24px;background:linear-gradient(#f8e6b6,#dfb96d);border-left:4px solid #a66a28;box-shadow:-15px 0 40px #0009}.ph-close{position:fixed;right:14px;top:11px;z-index:5;width:40px;height:40px;border:2px solid #d09a43;border-radius:50%;background:#48220f;color:#ffe5a5;font-size:1.1rem;cursor:pointer}.ph-panel .captain-card,.ph-panel #arsenalPanel,.ph-panel #missionsPanel{display:block!important;max-width:none!important;margin:0 0 12px!important}.ph-panel .captain-card{position:relative!important;left:auto!important;right:auto!important;top:auto!important}
+  @media(max-width:700px){
+   body.pirate-home-v2 .home-scene{padding:0 5px 72px!important}.ph-hud{height:52px;padding:4px;gap:4px}.ph-profile{padding:3px 5px}.ph-ptext small{display:none}.ph-ptext b{font-size:.58rem}.ph-avatar{font-size:1.15rem}.ph-res{gap:3px}.ph-res span{min-width:52px;padding:4px 4px;font-size:.56rem}.ph-settings{width:33px;height:33px;font-size:.85rem}.ph-title{font-size:.46rem;margin:5px auto 1px}.logo{width:86%!important;max-width:325px!important}.logo h2{font-size:1.55rem!important}.logo strong{font-size:.58rem!important;padding:1px 13px!important}.ph-map{height:calc(100dvh - 175px);min-height:400px;border-radius:28px}.ph-island{width:108px;height:92px}.ph-island .e{font-size:1.9rem}.ph-island.main{width:145px;height:118px}.ph-island.main .e{font-size:2.6rem}.ph-island.main b{font-size:1.05rem}.ph-island.adventure{left:4%;top:55%}.ph-island.challenge{right:4%;top:59%}.ph-star{top:12%;font-size:1.2rem}.ph-play{top:52%;min-width:125px;padding:8px 13px;font-size:.78rem}.ph-mini{padding:5px 7px;font-size:.52rem}.ph-mini.daily{right:7px;top:8px}.ph-mini.missions{left:7px;top:8px}.ph-mini.arsenal{left:7px;bottom:9px}.ph-mini.events{right:7px;bottom:9px}.ph-bottom{left:4px;right:4px;bottom:4px}.ph-tab{font-size:.44rem}.ph-tab span{font-size:.95rem}
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+  @media(max-width:390px){.ph-island{width:98px;height:86px}.ph-island.main{width:130px;height:108px}.ph-island.adventure{left:1%}.ph-island.challenge{right:1%}.ph-mini{font-size:.48rem}.ph-mini.arsenal,.ph-mini.events{display:none}}
+  `;document.head.appendChild(css);
+
+  const hud=document.createElement('div');hud.className='ph-hud';hud.innerHTML='<button class="ph-profile" type="button"><span class="ph-avatar">🏴‍☠️</span><span class="ph-ptext"><b>Capitaine</b><small>Profil & récompenses</small></span></button><div class="ph-res"><span>🪙 <b class="ph-coins">0</b></span><span>💎 <b class="ph-gems">0</b></span></div><button class="ph-settings" type="button">⚙️</button>';scene.prepend(hud);
+  const title=document.createElement('div');title.className='ph-title';title.textContent='☠️  CARTE DES CARAÏBES  ☠️';scene.querySelector('.logo')?.before(title);
+  const map=document.createElement('div');map.className='ph-map';map.innerHTML='<div class="ph-star">⭐</div><button class="ph-mini missions" type="button">📜 Missions</button><button class="ph-mini daily" type="button">🎁 Défi du jour</button><button class="ph-island main" type="button"><span class="e">🀄</span><b>CLASSIQUE</b><small>ÎLE PRINCIPALE</small></button><button class="ph-play" type="button">⚓ JOUER</button><button class="ph-island adventure" type="button"><span class="e">🗺️</span><b>AVENTURE</b><small>EXPLORER</small></button><button class="ph-island challenge" type="button"><span class="e">☠️</span><b>DÉFIS</b><small>RELEVER</small></button><button class="ph-mini arsenal" type="button">🧰 Arsenal</button><button class="ph-mini events" type="button">🎉 Événements</button>';scene.querySelector('.logo')?.after(map);
+  const bottom=document.createElement('nav');bottom.className='ph-bottom';bottom.innerHTML='<button class="ph-tab active"><span>🏠</span>Accueil</button><button class="ph-tab"><span>🗺️</span>Carte</button><button class="ph-tab"><span>🎯</span>Défis</button><button class="ph-tab"><span>💎</span>Boutique</button><button class="ph-tab"><span>👤</span>Profil</button>';document.body.appendChild(bottom);
+  const drawer=document.createElement('div');drawer.className='ph-drawer';drawer.innerHTML='<button class="ph-close" type="button">✕</button><div class="ph-panel"><h2 style="margin:0 0 10px;color:#4a2614">🏴‍☠️ Quartier du capitaine</h2></div>';document.body.appendChild(drawer);const panel=drawer.querySelector('.ph-panel');
+  function collect(){['.captain-card','#arsenalPanel','#missionsPanel'].forEach(sel=>{const el=document.querySelector(sel);if(el&&!panel.contains(el))panel.appendChild(el)})}collect();setTimeout(collect,500);setTimeout(collect,1500);
+  const open=()=>{collect();drawer.classList.add('open')};const close=()=>drawer.classList.remove('open');hud.querySelector('.ph-profile').onclick=open;hud.querySelector('.ph-settings').onclick=open;drawer.querySelector('.ph-close').onclick=close;drawer.onclick=e=>{if(e.target===drawer)close()};map.querySelector('.missions').onclick=open;map.querySelector('.arsenal').onclick=open;
+  const classic=()=>{const b=document.querySelector('.mode-card .play');if(b)b.click();else if(typeof window.newGame==='function')window.newGame(1)};map.querySelector('.ph-play').onclick=classic;map.querySelector('.ph-island.main').onclick=classic;map.querySelector('.ph-island.adventure').onclick=()=>alert('🗺️ Aventure : bientôt de nouvelles îles !');map.querySelector('.ph-island.challenge').onclick=()=>alert('☠️ Défis : prépare ton équipage !');map.querySelector('.daily').onclick=()=>alert('🎁 Défi du jour : termine le plateau et gagne des pièces !');map.querySelector('.events').onclick=()=>alert('🎉 Les événements arrivent bientôt !');
+  bottom.querySelectorAll('.ph-tab').forEach((b,i)=>b.onclick=()=>{if(i===4||i===2||i===3)open();else window.scrollTo({top:0,behavior:'smooth'})});
+  function refresh(){const s=state();const c=hud.querySelector('.ph-coins'),g=hud.querySelector('.ph-gems');if(c)c.textContent=Number(s.coins)||0;if(g)g.textContent=Number(s.gems)||0}refresh();setInterval(refresh,1200);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
