@@ -12,13 +12,34 @@ function save(){localStorage.setItem('mahjongPirateState',JSON.stringify(state))
 function captainTitle(){if(state.level<3)return'Mousse des Caraïbes';if(state.level<5)return'Capitaine Corsaire';if(state.level<8)return'Maître des Sept Mers';if(state.level<11)return'Légende des Océans';return'Roi des Flibustiers'}
 function updateHud(){if(!$('coins'))return;$('coins').textContent=state.coins;$('gems').textContent=state.gems;$('captainName').textContent=captainTitle();$('level').textContent=state.level;$('xp').textContent=state.xp;$('bestScore').textContent=state.bestScore;$('mapProgress').textContent=`${state.unlocked}/15`;document.querySelectorAll('.island').forEach((b,i)=>{b.classList.toggle('locked',i+1>state.unlocked);b.classList.toggle('current',i+1===state.unlocked)})}
 function rectOverlap(a,b){return a.x<b.x+TILE_W&&a.x+TILE_W>b.x&&a.y<b.y+TILE_H&&a.y+TILE_H>b.y}
-function freeTile(t,tiles){if(t.removed)return false;for(const o of tiles)if(!o.removed&&o.l>t.l&&rectOverlap(t,o))return false;let left=false,right=false;for(const o of tiles){if(o.removed||o.l!==t.l||o.id===t.id||o.y!==t.y)continue;if(o.x<t.x&&o.x+TILE_W>t.x)left=true;if(o.x<t.x+TILE_W&&o.x+TILE_W>t.x+TILE_W)right=true}return !(left&&right)}
+function freeTile(t,tiles){if(t.removed)return false;for(const o of tiles)if(!o.removed&&o.l>t.l&&rectOverlap(t,o))return false;let left=false,right=false;for(const o of tiles){if(o.removed||o.l!==t.l||o.id===t.id||Math.abs(o.y-t.y)>1)continue;if(o.x<t.x&&o.x+TILE_W>t.x)left=true;if(o.x<t.x+TILE_W&&o.x+TILE_W>t.x+TILE_W)right=true}return !(left&&right)}
 const SHAPE_PATTERNS={tortue:[2,4,6,6,6,6,6,4,2,2],pyramide:[2,4,6,6,6,6,6,6,6,6],diamant:[2,4,6,6,6,6,6,6,4,2],navire:[0,2,4,6,6,6,6,6,6,6],fort:[6,6,4,4,6,6,4,4,6,6],archipel:[4,6,6,4,6,4,6,6,6,4]};
 const SHAPE_BY_LEVEL={1:'tortue',2:'pyramide',3:'diamant',4:'navire',5:'fort',6:'archipel'};
 function shapeName(level){return SHAPE_BY_LEVEL[Math.min(level,6)]||'archipel'}
 function patternCells(shape){const widths=SHAPE_PATTERNS[shape]||SHAPE_PATTERNS.archipel,cells=[];widths.forEach((width,r)=>{const start=Math.floor((6-width)/2);for(let c=0;c<width;c++)cells.push({r,c:start+c})});return cells}
 function layerTargets(level){if(level===1)return[44,4,0,0,0];if(level===2)return[54,6,0,0,0];if(level===3)return[48,16,8,0,0];if(level===4)return[48,24,12,0,0];if(level===5)return[52,22,14,8,0];if(level===6)return[52,26,14,8,0];if(level===7)return[56,28,16,8,0];if(level===8)return[56,32,20,12,0];return[56,36,24,22,6]}
-function layout(level){const boardW=6*STEP_X+TILE_W+18,boardH=10*STEP_Y+TILE_H+18,out=[];const targets=layerTargets(level),shape=shapeName(level),cells=patternCells(shape);for(let l=0;l<5;l++){const wanted=Math.min(targets[l]||0,cells.length);if(!wanted)continue;const baseX=(boardW-(6*STEP_X+TILE_W))/2,baseY=(boardH-(10*STEP_Y+TILE_H))/2;const layerShiftX=(l%2)*(STEP_X/2),layerShiftY=(l%2)*(STEP_Y/2),ox=baseX+layerShiftX,oy=baseY+layerShiftY,cx=2.5,cy=4.5;const ranked=[...cells].sort((a,b)=>{const da=(a.c-cx)**2+(a.r-cy)**2,db=(b.c-cx)**2+(b.r-cy)**2;return da-db});let chosen=ranked.slice(0,wanted);if(l===0&&wanted===cells.length)chosen=cells;chosen.sort((a,b)=>a.r-b.r||a.c-b.c);chosen.forEach(({r,c})=>out.push({x:ox+c*STEP_X,y:oy+r*STEP_Y,l}))}return out.map((p,i)=>({...p,id:i}))}
+function layout(level){
+ const targets=layerTargets(level),shape=shapeName(level),cells=patternCells(shape),boardW=6*STEP_X+TILE_W+18,boardH=10*STEP_Y+TILE_H+18,out=[];
+ const baseX=(boardW-(6*STEP_X+TILE_W))/2,baseY=(boardH-(10*STEP_Y+TILE_H))/2;
+ let previous=[];
+ for(let l=0;l<5;l++){
+  const wanted=Math.min(targets[l]||0,cells.length);if(!wanted)continue;
+  const sx=(l%2)*STEP_X/2,sy=(l%2)*STEP_Y/2;
+  const candidates=cells.map(({r,c})=>({r,c,x:baseX+c*STEP_X+sx,y:baseY+r*STEP_Y+sy}));
+  let chosen;
+  if(l===0){
+   const cx=2.5,cy=4.5;
+   chosen=[...candidates].sort((a,b)=>((a.c-cx)**2+(a.r-cy)**2)-((b.c-cx)**2+(b.r-cy)**2)).slice(0,wanted);
+   if(wanted===cells.length)chosen=candidates;
+  }else{
+   const ranked=candidates.map(p=>{let overlaps=0;for(const q of previous)if(rectOverlap(p,q))overlaps++;const center=((p.c-2.5)**2+(p.r-4.5)**2);return{...p,overlaps,center}}).filter(p=>p.overlaps>=2).sort((a,b)=>b.overlaps-a.overlaps||a.center-b.center);
+   chosen=ranked.slice(0,wanted);
+   if(chosen.length<wanted){const used=new Set(chosen.map(p=>`${p.r}:${p.c}`));for(const p of candidates.filter(p=>!used.has(`${p.r}:${p.c}`)).sort((a,b)=>((a.c-2.5)**2+(a.r-4.5)**2)-((b.c-2.5)**2+(b.r-4.5)**2))){chosen.push(p);if(chosen.length===wanted)break}}
+  }
+  chosen.sort((a,b)=>a.r-b.r||a.c-b.c);const layer=[];for(const p of chosen){const q={x:p.x,y:p.y,l};out.push(q);layer.push(q)}previous=layer;
+ }
+ return out.map((p,i)=>({...p,id:i}));
+}
 function buildSolvable(level){const positions=layout(level),target=positions.length;for(let attempt=0;attempt<2200;attempt++){const remaining=positions.map(t=>({...t,removed:false})),pairs=[];while(remaining.some(t=>!t.removed)){const free=remaining.filter(t=>!t.removed&&freeTile(t,remaining));if(free.length<2)break;const a=free[Math.floor(Math.random()*free.length)],others=free.filter(t=>t.id!==a.id);const b=others[Math.floor(Math.random()*others.length)];a.removed=b.removed=true;pairs.push([a.id,b.id])}if(pairs.length*2===target){const tiles=positions.map(p=>({...p,removed:false,symbol:null}));pairs.forEach((ids,i)=>ids.forEach(id=>tiles[id].symbol=symbols[i%symbols.length]));return tiles}}const tiles=positions.map(p=>({...p,removed:false,symbol:null}));for(let i=0;i<tiles.length;i+=2){const s=symbols[(i/2)%symbols.length];tiles[i].symbol=s;tiles[i+1].symbol=s}return tiles}
 function symbolKind(s){const i=symbols.indexOf(s);return i<0?'unknown':`kind-${i}`}
 function newGame(level){clearInterval(timer);closeDeadlock();closeLose();game={level,tiles:buildSolvable(level),selected:null,score:0,moves:0,pairs:0,combo:0,bestCombo:0,undo:[],shuffles:0};startedAt=Date.now();$('map').classList.add('hidden');$('game').classList.remove('hidden');$('islandTitle').textContent=names[level]||`Île ${level}`;$('difficulty').textContent=difficulties[level]||'Légendaire';$('msg').textContent='';render();timer=setInterval(tick,500)}
