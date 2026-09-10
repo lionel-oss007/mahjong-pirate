@@ -21,22 +21,20 @@ function layerTargets(level){if(level===1)return[44,4,0,0,0];if(level===2)return
 function layout(level){
  const targets=layerTargets(level),shape=shapeName(level),cells=patternCells(shape),boardW=6*STEP_X+TILE_W+18,boardH=10*STEP_Y+TILE_H+18,out=[];
  const baseX=(boardW-(6*STEP_X+TILE_W))/2,baseY=(boardH-(10*STEP_Y+TILE_H))/2;
- let previous=[];
  for(let l=0;l<5;l++){
   const wanted=Math.min(targets[l]||0,cells.length);if(!wanted)continue;
-  const sx=(l%2)*STEP_X/2,sy=(l%2)*STEP_Y/2;
-  const candidates=cells.map(({r,c})=>({r,c,x:baseX+c*STEP_X+sx,y:baseY+r*STEP_Y+sy}));
-  let chosen;
   if(l===0){
-   const cx=2.5,cy=4.5;
-   chosen=[...candidates].sort((a,b)=>((a.c-cx)**2+(a.r-cy)**2)-((b.c-cx)**2+(b.r-cy)**2)).slice(0,wanted);
-   if(wanted===cells.length)chosen=candidates;
-  }else{
-   const ranked=candidates.map(p=>{let overlaps=0;for(const q of previous)if(rectOverlap(p,q))overlaps++;const center=((p.c-2.5)**2+(p.r-4.5)**2);return{...p,overlaps,center}}).filter(p=>p.overlaps>=2).sort((a,b)=>b.overlaps-a.overlaps||a.center-b.center);
-   chosen=ranked.slice(0,wanted);
-   if(chosen.length<wanted){const used=new Set(chosen.map(p=>`${p.r}:${p.c}`));for(const p of candidates.filter(p=>!used.has(`${p.r}:${p.c}`)).sort((a,b)=>((a.c-2.5)**2+(a.r-4.5)**2)-((b.c-2.5)**2+(b.r-4.5)**2))){chosen.push(p);if(chosen.length===wanted)break}}
+   const ranked=[...cells].sort((a,b)=>((a.c-2.5)**2+(a.r-4.5)**2)-((b.c-2.5)**2+(b.r-4.5)**2));
+   const chosen=wanted===cells.length?cells:ranked.slice(0,wanted);
+   chosen.sort((a,b)=>a.r-b.r||a.c-b.c).forEach(({r,c})=>out.push({x:baseX+c*STEP_X,y:baseY+r*STEP_Y,l}));
+   continue;
   }
-  chosen.sort((a,b)=>a.r-b.r||a.c-b.c);const layer=[];for(const p of chosen){const q={x:p.x,y:p.y,l};out.push(q);layer.push(q)}previous=layer;
+  const sx=(l%2)*STEP_X/2;
+  const compactY=STEP_Y*0.58;
+  const candidates=cells.map(({r,c})=>({r,c,x:baseX+c*STEP_X+sx,y:baseY+4.5*STEP_Y+(r-4.5)*compactY+l*7}));
+  const ranked=candidates.sort((a,b)=>((a.c-2.5)**2+(a.r-4.5)**2)-((b.c-2.5)**2+(b.r-4.5)**2));
+  const chosen=ranked.slice(0,wanted);
+  chosen.sort((a,b)=>a.y-b.y||a.x-b.x).forEach(p=>out.push({x:p.x,y:p.y,l}));
  }
  return out.map((p,i)=>({...p,id:i}));
 }
