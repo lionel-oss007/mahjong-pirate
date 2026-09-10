@@ -1,69 +1,14 @@
-/* Mahjong Pirate — point d'entrée de l'interface d'accueil. */
+/* Interface d'accueil unique — aucun ancien script d'interface. */
 (function(){
-  'use strict';
-  function forceStart(){
-    try{
-      if(typeof window.newGame==='function'){
-        window.newGame(1);
-        return true;
-      }
-    }catch(err){console.error('Mahjong Pirates: impossible de lancer le niveau',err);}
-    return false;
-  }
-  function loadHome(){
-    if(!document.querySelector('link[data-pirate-final-css]')){
-      const css=document.createElement('link');
-      css.rel='stylesheet';
-      css.href='game-home-redesign.css?v=20260909-4';
-      css.dataset.pirateFinalCss='1';
-      document.head.appendChild(css);
-    }
-    if(!document.querySelector('script[data-pirate-final-home]')){
-      const script=document.createElement('script');
-      script.src='home-final.js?v=20260909-3';
-      script.dataset.pirateFinalHome='1';
-      document.body.appendChild(script);
-    }
-    if(!document.querySelector('script[data-pirate-map-enhancer]')){
-      const script=document.createElement('script');
-      script.src='map-enhancer.js?v=20260909-1';
-      script.dataset.pirateMapEnhancer='1';
-      document.body.appendChild(script);
-    }
-    if(!document.querySelector('script[data-pirate-island-polish]')){
-      const script=document.createElement('script');
-      script.src='island-polish.js?v=20260909-1';
-      script.dataset.pirateIslandPolish='1';
-      document.body.appendChild(script);
-    }
-    if(!document.querySelector('link[data-pirate-click-fix]')){
-      const css=document.createElement('link');
-      css.rel='stylesheet';
-      css.href='home-click-fix.css?v=20260909-2';
-      css.dataset.pirateClickFix='1';
-      document.head.appendChild(css);
-    }
-  }
-  function boot(){
-    loadHome();
-    const home=document.getElementById('home');
-    const map=document.getElementById('map');
-    const game=document.getElementById('game');
-    document.getElementById('homeBtn')?.addEventListener('click',()=>{
-      if(typeof window.home==='function')window.home();
-      map?.classList.add('hidden');
-      game?.classList.add('hidden');
-      home?.classList.remove('hidden');
-      home?.scrollIntoView({behavior:'smooth',block:'start'});
-    });
-    document.addEventListener('click',e=>{
-      const target=e.target.closest?.('.pgh-play,.pgh-classic');
-      if(!target)return;
-      e.preventDefault();
-      e.stopPropagation();
-      forceStart();
-    },true);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
-  else boot();
+'use strict';
+const root=document.getElementById('home');if(!root)return;
+const state=()=>{try{return JSON.parse(localStorage.getItem('mahjongPirateState')||'{}')||{};}catch{return{};}};
+root.innerHTML=`<div class="pirate-home"><header class="ph-hud"><div class="ph-profile"><span class="ph-avatar">🏴‍☠️</span><div><b id="captainName">Mousse des Caraïbes</b><small>Capitaine · Niv. <strong id="level">1</strong> · XP <strong id="xp">0</strong> · 🏆 <strong id="bestScore">0</strong></small></div></div><div class="ph-res"><span>🪙 <b id="coins">0</b></span><span>💎 <b id="gems">0</b></span></div><button class="ph-settings" type="button">⚙️</button></header><div class="ph-title">☠️ CARTE DES CARAÏBES ☠️</div><div class="ph-logo"><strong>MAHJONG</strong><span>PIRATES</span></div><main class="ph-map"><div class="ph-sky">☁️　　☁️　　　　　　　☁️</div><button class="ph-chip ph-missions" type="button">📜 Missions</button><button class="ph-chip ph-daily" type="button">🎁 Défi du jour</button><div class="ph-ship">🌴　〰️〰️　🚢　〰️〰️　🌴</div><button class="ph-island ph-classic" type="button"><span>🀄</span><b>CLASSIQUE</b><small>ÎLE PRINCIPALE</small></button><button class="ph-play" type="button">⚓ JOUER</button><button class="ph-island ph-adventure" type="button"><span>🗺️</span><b>AVENTURE</b><small>EXPLORER</small></button><button class="ph-island ph-challenge" type="button"><span>☠️</span><b>DÉFIS</b><small>RELEVER</small></button><button class="ph-chip ph-arsenal" type="button">🧰 Arsenal</button><button class="ph-chip ph-events" type="button">🎉 Événements</button></main><nav class="ph-nav"><button class="active" data-home>🏠<small>Accueil</small></button><button data-map>🗺️<small>Carte</small></button><button>🎯<small>Défis</small></button><button>💎<small>Boutique</small></button><button>👤<small>Profil</small></button></nav></div>`;
+const style=document.createElement('style');style.textContent=`#home{min-height:100dvh}.pirate-home{min-height:100dvh;display:flex;flex-direction:column;padding-bottom:8px;background:linear-gradient(180deg,#159eac 0%,#08798a 48%,#06495c 100%);color:#ffe8aa;overflow:hidden}.ph-hud{height:62px;display:grid;grid-template-columns:1fr auto 42px;align-items:center;gap:8px;padding:6px 9px;border-bottom:3px solid #d39a3d;background:linear-gradient(#70401f,#2d1308);box-shadow:0 5px 15px #00131dcc}.ph-profile{display:flex;align-items:center;gap:7px;min-width:0}.ph-avatar{font-size:1.35rem}.ph-profile b{display:block;font-size:.72rem}.ph-profile small{display:block;font-size:.52rem;opacity:.8}.ph-profile strong{color:#ffe08a}.ph-res{display:flex;gap:5px}.ph-res span{min-width:65px;padding:6px 7px;border:1px solid #c58a36;border-radius:9px;background:#241008;text-align:center;font-weight:900;font-size:.72rem}.ph-settings{width:38px;height:38px;border:2px solid #c58a36;border-radius:10px;background:#49220f;color:#ffe7aa}.ph-title{text-align:center;font-size:.56rem;font-weight:900;letter-spacing:.18em;margin:6px 0 3px}.ph-logo{align-self:center;padding:5px 18px 7px;border:3px solid #d29a3d;border-radius:16px;background:linear-gradient(#8d5529,#3c190c);box-shadow:0 5px 0 #281006,0 8px 18px #00192399;transform:rotate(-1deg);text-align:center}.ph-logo strong{display:block;font:900 1.75rem Georgia;text-shadow:2px 3px #351208}.ph-logo span{display:inline-block;margin-top:1px;padding:2px 24px;border:2px solid #714018;border-radius:6px;background:#e4bd73;color:#652d12;font:900 .65rem Georgia;letter-spacing:.18em}.ph-map{position:relative;flex:1;min-height:0;width:min(1050px,calc(100% - 10px));margin:5px auto;border:3px solid #9d672b;border-radius:26px;background:radial-gradient(circle at 22% 24%,#39b6bb 0 7%,transparent 8%),radial-gradient(circle at 76% 75%,#168f9a 0 9%,transparent 10%),linear-gradient(145deg,#1595a3,#087182 58%,#07566a);box-shadow:inset 0 0 55px #00374699,0 8px 22px #00192399;overflow:hidden}.ph-sky{position:absolute;top:4%;left:4%;font-size:1.8rem;opacity:.22;pointer-events:none}.ph-ship{position:absolute;left:0;right:0;bottom:4%;text-align:center;font-size:2rem;opacity:.5;pointer-events:none}.ph-chip{position:absolute;z-index:5;padding:6px 9px;border:2px solid #c88b38;border-radius:10px;background:#30150ce8;color:#ffe5a4;font-weight:900;font-size:.58rem;box-shadow:0 4px 0 #1d0b05}.ph-missions{left:10px;top:10px}.ph-daily{right:10px;top:10px}.ph-arsenal{left:10px;bottom:10px}.ph-events{right:10px;bottom:10px}.ph-island{position:absolute;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid #b97a30;border-radius:50%;background:radial-gradient(ellipse at 50% 30%,#ffe9a7,#d4a052 74%,#965d26);color:#472313;box-shadow:inset 0 0 0 3px #fff3b066,0 7px 0 #603115,0 12px 20px #00192388;cursor:pointer}.ph-island span{font-size:2.7rem}.ph-island b{font:900 1rem Georgia}.ph-island small{font-size:.5rem;font-weight:900;margin-top:2px}.ph-classic{left:50%;top:27%;transform:translateX(-50%);width:205px;height:155px;box-shadow:0 0 0 5px #f5d36b55,inset 0 0 0 3px #fff3a666,0 9px 0 #603115,0 17px 26px #00192399}.ph-play{position:absolute;z-index:7;left:50%;top:58%;transform:translateX(-50%);min-width:160px;padding:9px 20px;border:3px solid #b96e20;border-radius:14px;background:linear-gradient(#35dc69,#078b40);color:#fff;font-weight:900;box-shadow:0 5px 0 #52200d,0 9px 15px #00192388}.ph-adventure{left:8%;top:57%;width:145px;height:115px}.ph-challenge{right:8%;top:57%;width:145px;height:115px}.ph-nav{height:57px;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:4px;border:2px solid #c88b38;border-radius:14px;background:linear-gradient(#693a1b,#291008);margin:0 5px;box-shadow:0 6px 18px #000b}.ph-nav button{border:1px solid #a96c2a;border-radius:9px;background:transparent;color:#ffe7a8;font-weight:900;font-size:.95rem}.ph-nav small{display:block;font-size:.48rem;margin-top:1px}.ph-nav .active{background:linear-gradient(#d58d35,#713b18);box-shadow:0 0 0 1px #f2cd65}.ph-play:active{transform:translate(-50%,3px)}.ph-island:active{transform:translateY(3px)}@media(max-width:700px){.ph-hud{height:53px}.ph-profile small{font-size:.45rem}.ph-logo strong{font-size:1.4rem}.ph-map{border-radius:21px}.ph-classic{width:150px;height:116px;top:26%}.ph-classic span{font-size:2.4rem}.ph-classic b{font-size:.82rem}.ph-adventure,.ph-challenge{width:105px;height:88px;top:57%}.ph-adventure{left:3%}.ph-challenge{right:3%}.ph-adventure span,.ph-challenge span{font-size:2rem}.ph-play{top:51%;min-width:125px;padding:8px 12px;font-size:.76rem}.ph-chip{font-size:.48rem;padding:5px 7px}.ph-ship{font-size:1.7rem}.ph-res span{min-width:53px;font-size:.58rem}}`;document.head.appendChild(style);
+function showHome(){document.getElementById('home').classList.remove('hidden');document.getElementById('map').classList.add('hidden');document.getElementById('game').classList.add('hidden');window.scrollTo(0,0)}
+function showMap(){document.getElementById('home').classList.add('hidden');document.getElementById('map').classList.remove('hidden');document.getElementById('game').classList.add('hidden');window.scrollTo(0,0)}
+function start(level){if(typeof window.newGame==='function')window.newGame(level||1)}
+root.querySelector('.ph-play').onclick=()=>start(1);root.querySelector('.ph-classic').onclick=()=>start(1);root.querySelector('.ph-adventure').onclick=showMap;root.querySelector('[data-map]').onclick=showMap;root.querySelector('[data-home]').onclick=showHome;root.querySelector('.ph-missions').onclick=()=>alert('Les missions seront ajoutées après stabilisation du jeu.');root.querySelector('.ph-daily').onclick=()=>start(1);root.querySelector('.ph-arsenal').onclick=()=>alert('L’arsenal sera ajouté après stabilisation.');root.querySelector('.ph-events').onclick=showMap;document.getElementById('mapHome').onclick=showHome;
+document.querySelectorAll('.island').forEach(btn=>btn.onclick=()=>{const s=state(),level=Number(btn.dataset.level)||1;if(level<=(Number(s.unlocked)||1))start(level)});
+function refresh(){const s=state(),unlocked=Math.max(1,Number(s.unlocked)||1);document.querySelectorAll('.island').forEach((b,i)=>{b.classList.toggle('locked',i+1>unlocked);b.classList.toggle('current',i+1===Number(s.level||1))});['coins','gems','level','xp','bestScore'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=s[id]??0})}refresh();window.showPirateHome=showHome;
 })();
