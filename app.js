@@ -17,50 +17,23 @@ const SHAPE_PATTERNS={tortue:[2,4,6,6,6,6,6,4,2,2],pyramide:[2,4,6,6,6,6,6,6,6,6
 const SHAPE_BY_LEVEL={1:'tortue',2:'pyramide',3:'diamant',4:'navire',5:'fort',6:'archipel'};
 function shapeName(level){return SHAPE_BY_LEVEL[Math.min(level,6)]||'archipel'}
 function patternCells(shape){const widths=SHAPE_PATTERNS[shape]||SHAPE_PATTERNS.archipel,cells=[];widths.forEach((width,r)=>{const start=Math.floor((6-width)/2);for(let c=0;c<width;c++)cells.push({r,c:start+c})});return cells}
-function layerTargets(level){if(level===1)return[44,4,0,0,0];if(level===2)return[54,6,0,0,0];if(level===3)return[48,16,8,0,0];if(level===4)return[48,24,12,0,0];if(level===5)return[52,22,14,8,0];if(level===6)return[52,26,14,8,0];if(level===7)return[56,28,16,8,0];if(level===8)return[56,32,20,12,0];return[56,36,24,22,6]}
+function layerTargets(level){if(level===1)return[36,8,4,0,0];if(level===2)return[42,4,2,0,0];if(level===3)return[40,6,2,0,0];if(level===4)return[40,6,2,0,0];if(level===5)return[42,4,2,0,0];if(level===6)return[40,6,2,0,0];if(level===7)return[40,6,2,0,0];if(level===8)return[40,6,2,0,0];return[40,6,2,0,0]}
 function layout(level){
  const targets=layerTargets(level),shape=shapeName(level),cells=patternCells(shape),boardW=6*STEP_X+TILE_W+18,boardH=10*STEP_Y+TILE_H+18,out=[];
  const baseX=(boardW-(6*STEP_X+TILE_W))/2,baseY=(boardH-(10*STEP_Y+TILE_H))/2;
- let previous=[];
  for(let l=0;l<5;l++){
   const wanted=Math.min(targets[l]||0,cells.length);if(!wanted)continue;
-  const dx=(l%2)*LAYER_DX,dy=-l*LAYER_DY;
-  const candidates=cells.map(({r,c})=>({r,c,x:baseX+c*STEP_X+dx,y:baseY+r*STEP_Y+dy}));
-  let chosen=[];
   if(l===0){
-   const ranked=[...candidates].sort((a,b)=>((a.c-2.5)**2+(a.r-4.5)**2)-((b.c-2.5)**2+(b.r-4.5)**2));
-   chosen=wanted===cells.length?candidates:ranked.slice(0,wanted);
-  }else{
-   const ranked=candidates.map(p=>{let overlaps=0;for(const q of previous)if(rectOverlap(p,q))overlaps++;const center=(p.c-2.5)**2+(p.r-4.5)**2;return{...p,overlaps,center}}).sort((a,b)=>b.overlaps-a.overlaps||a.center-b.center);
-   chosen=ranked.slice(0,wanted);
+   const ranked=[...cells].sort((a,b)=>((a.c-2.5)**2+(a.r-4.5)**2)-((b.c-2.5)**2+(b.r-4.5)**2));
+   const chosen=wanted===cells.length?cells:ranked.slice(0,wanted);
+   chosen.sort((a,b)=>a.r-b.r||a.c-b.c).forEach(({r,c})=>out.push({x:baseX+c*STEP_X,y:baseY+r*STEP_Y,l}));
+   continue;
   }
-  chosen.sort((a,b)=>a.r-b.r||a.c-b.c);
-  previous=chosen.map((p,i)=>({x:p.x,y:p.y,l,id:i}));
-  for(const p of chosen)out.push({x:p.x,y:p.y,l});
+  const sx=(l%2)*LAYER_DX;
+  const candidates=cells.map(({r,c})=>({r,c,x:baseX+c*STEP_X+sx,y:baseY+4.5*STEP_Y+(r-4.5)*STEP_Y+l*LAYER_DY}));
+  const ranked=candidates.sort((a,b)=>((a.c-2.5)**2+(a.r-4.5)**2)-((b.c-2.5)**2+(b.r-4.5)**2));
+  const chosen=ranked.slice(0,wanted);
+  chosen.sort((a,b)=>a.y-b.y||a.x-b.x).forEach(p=>out.push({x:p.x,y:p.y,l}));
  }
  return out.map((p,i)=>({...p,id:i}));
 }
-function buildSolvable(level){const positions=layout(level),target=positions.length;for(let attempt=0;attempt<2200;attempt++){const remaining=positions.map(t=>({...t,removed:false})),pairs=[];while(remaining.some(t=>!t.removed)){const free=remaining.filter(t=>!t.removed&&freeTile(t,remaining));if(free.length<2)break;const a=free[Math.floor(Math.random()*free.length)],others=free.filter(t=>t.id!==a.id);const b=others[Math.floor(Math.random()*others.length)];a.removed=b.removed=true;pairs.push([a.id,b.id])}if(pairs.length*2===target){const tiles=positions.map(p=>({...p,removed:false,symbol:null}));pairs.forEach((ids,i)=>ids.forEach(id=>tiles[id].symbol=symbols[i%symbols.length]));return tiles}}const tiles=positions.map(p=>({...p,removed:false,symbol:null}));for(let i=0;i<tiles.length;i+=2){const s=symbols[(i/2)%symbols.length];tiles[i].symbol=s;tiles[i+1].symbol=s}return tiles}
-function symbolKind(s){const i=symbols.indexOf(s);return i<0?'unknown':`kind-${i}`}
-function newGame(level){clearInterval(timer);closeDeadlock();closeLose();game={level,tiles:buildSolvable(level),selected:null,score:0,moves:0,pairs:0,combo:0,bestCombo:0,undo:[],shuffles:0};startedAt=Date.now();$('map').classList.add('hidden');$('game').classList.remove('hidden');$('islandTitle').textContent=names[level]||`Île ${level}`;$('difficulty').textContent=difficulties[level]||'Légendaire';$('msg').textContent='';render();timer=setInterval(tick,500)}
-function tick(){if(!game)return;const sec=Math.floor((Date.now()-startedAt)/1000);$('time').textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`}
-function updateTargets(){if(!game)return;const g=goals[game.level]||5000;if($('goal1'))$('goal1').textContent=Math.round(g*.3);if($('goal2'))$('goal2').textContent=Math.round(g*.6);if($('goal3'))$('goal3').textContent=g;if($('goalBar'))$('goalBar').style.width=Math.min(100,(game.score/g)*100)+'%'}
-function render(){const board=$('board');board.innerHTML='';board.style.width=boardBaseWidth()+'px';board.style.height=boardBaseHeight()+'px';board.dataset.shape=shapeName(game.level);board.dataset.level=game.level;board.setAttribute('aria-label',`Plateau ${shapeName(game.level)} — niveau ${game.level}`);for(const t of game.tiles){if(t.removed)continue;const free=freeTile(t,game.tiles),b=document.createElement('button');b.className='tile '+(free?'free':'blocked')+' '+symbolKind(t.symbol)+(game.selected===t.id?' selected':'');b.textContent=t.symbol;b.style.left=t.x+'px';b.style.top=t.y+'px';b.style.width=TILE_W+'px';b.style.height=TILE_H+'px';b.style.zIndex=20+t.l;b.dataset.layer=t.l;b.dataset.tileId=t.id;b.onclick=()=>pick(t.id);board.appendChild(b)}$('score').textContent=game.score;$('remaining').textContent=game.tiles.filter(t=>!t.removed).length;$('moves').textContent=game.moves;$('pairs').textContent=game.pairs;if($('tray')){$('tray').innerHTML='';$('tray').style.display='none';if($('tray').parentElement)$('tray').parentElement.style.display='none'}updateTargets();updateBoosters()}
-function boardBaseWidth(){return 6*STEP_X+TILE_W+18}
-function boardBaseHeight(){return 10*STEP_Y+TILE_H+18}
-function legalPairs(){const free=game.tiles.filter(t=>!t.removed&&freeTile(t,game.tiles)),out=[];for(let i=0;i<free.length;i++)for(let j=i+1;j<free.length;j++)if(free[i].symbol===free[j].symbol)out.push([free[i],free[j]]);return out}
-function showDeadlock(){if(!game||game.tiles.every(t=>t.removed)||legalPairs().length)return;clearInterval(timer);$('deadlockText').textContent=`Il reste ${game.tiles.filter(t=>!t.removed).length} tuiles, mais aucune paire libre n'est disponible. Utilise le mélange uniquement pour tenter de débloquer une nouvelle paire.`;$('deadlock').showModal();sfx(false)}
-function closeDeadlock(){if($('deadlock')?.open)$('deadlock').close()}
-function showLose(){closeLose()}
-function closeLose(){if($('lose')?.open)$('lose').close()}
-function pick(id){if(!game)return;const t=game.tiles.find(x=>x.id===id);if(!t||t.removed||!freeTile(t,game.tiles))return;if(game.selected===id){game.selected=null;render();return}if(game.selected!==null){const a=game.tiles.find(x=>x.id===game.selected);if(a&&a.symbol===t.symbol&&freeTile(a,game.tiles)){game.undo.push({ids:[a.id,t.id],score:game.score,combo:game.combo});a.removed=true;t.removed=true;game.selected=null;game.moves++;game.pairs++;game.combo++;game.bestCombo=Math.max(game.bestCombo,game.combo);const gain=100+game.level*15+Math.max(0,game.combo-1)*20;game.score+=gain;sfx(true);$('msg').textContent=game.combo>=3?`🔥 Combo x${game.combo} ! +${gain} points.`:`⚓ Paire trouvée ! +${gain} points.`;render();if(game.tiles.every(x=>x.removed))win();else if(!legalPairs().length)showDeadlock();return}game.selected=null}$('msg').textContent=`🪙 ${t.symbol} sélectionnée — choisis la même tuile libre.`;game.selected=id;render()}
-function hint(){if(!game)return;const pair=legalPairs()[0];if(!pair){showDeadlock();return}game.selected=pair[0].id;game.score=Math.max(0,game.score-10);render();$('msg').textContent=`💡 Indice : ${pair[0].symbol} a une paire libre.`}
-function shuffle(){if(!game)return;closeDeadlock();const active=game.tiles.filter(t=>!t.removed),original=active.map(t=>t.symbol);let ok=false;for(let attempt=0;attempt<250&&!ok;attempt++){const syms=[...original].sort(()=>Math.random()-.5);active.forEach((t,i)=>t.symbol=syms[i]);ok=legalPairs().length>0}if(!ok)active.forEach((t,i)=>t.symbol=original[i]);game.score=Math.max(0,game.score-25);game.combo=0;game.selected=null;game.shuffles++;render();$('msg').textContent=ok?'🔀 Mélange : une nouvelle paire est potentiellement accessible.':'🔀 Le mélange n’a pas débloqué de paire.';timer=setInterval(tick,500)}
-function undo(){if(!game||!game.undo.length){$('msg').textContent='↩️ Aucun coup à annuler.';return}const u=game.undo.pop();u.ids.forEach(id=>{const t=game.tiles.find(x=>x.id===id);if(t)t.removed=false});game.score=u.score;game.combo=u.combo;game.pairs=Math.max(0,game.pairs-1);game.moves++;game.selected=null;render();closeDeadlock();$('msg').textContent='↩️ Dernière paire restaurée.';if(!timer)timer=setInterval(tick,500)}
-function bomb(){if(!game)return;const pair=legalPairs()[0];if(!pair){showDeadlock();return}pair.forEach(t=>t.removed=true);game.pairs++;game.score+=100;game.combo=0;game.selected=null;render();$('msg').textContent='💣 Canon pirate ! Une paire libre a été pulvérisée.';if(game.tiles.every(t=>t.removed))win()}
-function updateBoosters(){if(!$('undoCount'))return;$('undoCount').textContent=game?.undo?.length||0;$('shuffleCount').textContent=game?.shuffles||0}
-function win(){clearInterval(timer);timer=null;closeDeadlock();closeLose();const sec=Math.floor((Date.now()-startedAt)/1000),g=goals[game.level]||5000,stars=game.score>=g?3:game.score>=g*.6?2:1,reward=25*game.level+stars*10,xp=30*game.level+stars*12;state.coins+=reward;state.xp+=xp;state.level=Math.max(state.level,Math.min(15,1+Math.floor(state.xp/100)));if(game.score>state.bestScore)state.bestScore=game.score;if(game.level===state.unlocked&&state.unlocked<15)state.unlocked++;save();$('winText').textContent=`Île terminée en ${sec}s avec ${game.moves} coups et ${game.bestCombo} de combo.`;$('stars').textContent='★'.repeat(stars)+'☆'.repeat(3-stars);$('rewardCoins').textContent=reward;$('rewardXp').textContent=xp;$('next').textContent=game.level<15?'Île suivante':'Retour à la carte';$('next').onclick=()=>{$('win').close();if(game.level<15)newGame(game.level+1);else home()};$('win').showModal();sfx(true)}
-function home(){clearInterval(timer);timer=null;closeDeadlock();closeLose();game=null;$('game').classList.add('hidden');$('map').classList.remove('hidden');$('msg').textContent='';updateHud()}
-function sfx(ok){try{const c=new AudioContext(),o=c.createOscillator(),g=c.createGain();o.frequency.value=ok?660:180;g.gain.value=.04;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.09)}catch(e){}}
-function resetProgress(){if(!confirm('Réinitialiser toute la progression ?'))return;['mahjongPirateState','mahjongPirateProgression','mahjongPirateMissions','mahjongPirateArsenal'].forEach(key=>localStorage.removeItem(key));location.reload()}
-document.querySelectorAll('.island').forEach(b=>b.onclick=()=>{const l=+b.dataset.level;if(l<=state.unlocked)newGame(l)});if($('hint'))$('hint').onclick=hint;if($('shuffle'))$('shuffle').onclick=shuffle;if($('restart'))$('restart').onclick=()=>game&&newGame(game.level);if($('homeBtn'))$('homeBtn').onclick=home;if($('resetProgress'))$('resetProgress').onclick=resetProgress;if($('reset'))$('reset').onclick=resetProgress;if($('next'))$('next').onclick=()=>{$('win').close();if(game?.level<15)newGame(game.level+1);else home()};window.newGame=newGame;window.home=home;updateHud();
