@@ -1,6 +1,15 @@
 /* Mahjong Pirate — point d'entrée de l'interface d'accueil. */
 (function(){
   'use strict';
+  function forceStart(){
+    try{
+      if(typeof window.newGame==='function'){
+        window.newGame(1);
+        return true;
+      }
+    }catch(err){console.error('Mahjong Pirates: impossible de lancer le niveau',err);}
+    return false;
+  }
   function loadHome(){
     if(!document.querySelector('link[data-pirate-final-css]')){
       const css=document.createElement('link');
@@ -11,7 +20,7 @@
     }
     if(!document.querySelector('script[data-pirate-final-home]')){
       const script=document.createElement('script');
-      script.src='home-final.js?v=20260909-2';
+      script.src='home-final.js?v=20260909-3';
       script.dataset.pirateFinalHome='1';
       document.body.appendChild(script);
     }
@@ -27,7 +36,6 @@
       script.dataset.pirateIslandPolish='1';
       document.body.appendChild(script);
     }
-    /* Doit être chargé en dernier : island-polish/map-enhancer peuvent définir transform. */
     if(!document.querySelector('link[data-pirate-click-fix]')){
       const css=document.createElement('link');
       css.rel='stylesheet';
@@ -48,6 +56,13 @@
       home?.classList.remove('hidden');
       home?.scrollIntoView({behavior:'smooth',block:'start'});
     });
+    document.addEventListener('click',e=>{
+      const target=e.target.closest?.('.pgh-play,.pgh-classic');
+      if(!target)return;
+      e.preventDefault();
+      e.stopPropagation();
+      forceStart();
+    },true);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
   else boot();
