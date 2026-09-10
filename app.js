@@ -3,7 +3,7 @@ const names=['Île du Départ','Baie des Palmiers','Île du Kraken','Fort des Fl
 const counts=[0,48,60,72,84,96,108,120,132,144,144,144,144,144,144,144];
 const difficulties=['','Facile','Facile','Moyen','Moyen','Difficile','Difficile','Très difficile','Très difficile','Expert','Expert','Maître','Maître','Légendaire','Mythique','Trésor ultime'];
 const goals=[0,900,1150,1450,1750,2100,2450,2850,3250,3700,4200,4700,5200,5700,6200,6800];
-const TILE_W=52,TILE_H=62,STEP_X=52,STEP_Y=50;
+const TILE_W=52,TILE_H=62,STEP_X=52,STEP_Y=62,LAYER_DX=26,LAYER_DY=31;
 let state=JSON.parse(localStorage.getItem('mahjongPirateState')||'null')||{coins:0,gems:0,level:1,xp:0,bestScore:0,unlocked:1};
 state.unlocked=Math.max(1,Math.min(15,Number(state.unlocked)||1));state.level=Math.max(1,Math.min(15,Number(state.level)||1));
 let game=null,timer=null,startedAt=0;
@@ -12,7 +12,7 @@ function save(){localStorage.setItem('mahjongPirateState',JSON.stringify(state))
 function captainTitle(){if(state.level<3)return'Mousse des Caraïbes';if(state.level<5)return'Capitaine Corsaire';if(state.level<8)return'Maître des Sept Mers';if(state.level<11)return'Légende des Océans';return'Roi des Flibustiers'}
 function updateHud(){if(!$('coins'))return;$('coins').textContent=state.coins;$('gems').textContent=state.gems;$('captainName').textContent=captainTitle();$('level').textContent=state.level;$('xp').textContent=state.xp;$('bestScore').textContent=state.bestScore;$('mapProgress').textContent=`${state.unlocked}/15`;document.querySelectorAll('.island').forEach((b,i)=>{b.classList.toggle('locked',i+1>state.unlocked);b.classList.toggle('current',i+1===state.unlocked)})}
 function rectOverlap(a,b){return a.x<b.x+TILE_W&&a.x+TILE_W>b.x&&a.y<b.y+TILE_H&&a.y+TILE_H>b.y}
-function freeTile(t,tiles){if(t.removed)return false;for(const o of tiles)if(!o.removed&&o.l>t.l&&rectOverlap(t,o))return false;let left=false,right=false;for(const o of tiles){if(o.removed||o.l!==t.l||o.id===t.id||Math.abs(o.y-t.y)>1)continue;if(o.x<t.x&&o.x+TILE_W>t.x)left=true;if(o.x<t.x+TILE_W&&o.x+TILE_W>t.x+TILE_W)right=true}return !(left&&right)}
+function freeTile(t,tiles){if(t.removed)return false;for(const o of tiles)if(!o.removed&&o.l>t.l&&rectOverlap(t,o))return false;let left=false,right=false;for(const o of tiles){if(o.removed||o.l!==t.l||o.id===t.id||o.y!==t.y)continue;if(o.x<t.x&&o.x+TILE_W>t.x)left=true;if(o.x<t.x+TILE_W&&o.x+TILE_W>t.x+TILE_W)right=true}return !(left&&right)}
 const SHAPE_PATTERNS={tortue:[2,4,6,6,6,6,6,4,2,2],pyramide:[2,4,6,6,6,6,6,6,6,6],diamant:[2,4,6,6,6,6,6,6,4,2],navire:[0,2,4,6,6,6,6,6,6,6],fort:[6,6,4,4,6,6,4,4,6,6],archipel:[4,6,6,4,6,4,6,6,6,4]};
 const SHAPE_BY_LEVEL={1:'tortue',2:'pyramide',3:'diamant',4:'navire',5:'fort',6:'archipel'};
 function shapeName(level){return SHAPE_BY_LEVEL[Math.min(level,6)]||'archipel'}
@@ -21,20 +21,22 @@ function layerTargets(level){if(level===1)return[44,4,0,0,0];if(level===2)return
 function layout(level){
  const targets=layerTargets(level),shape=shapeName(level),cells=patternCells(shape),boardW=6*STEP_X+TILE_W+18,boardH=10*STEP_Y+TILE_H+18,out=[];
  const baseX=(boardW-(6*STEP_X+TILE_W))/2,baseY=(boardH-(10*STEP_Y+TILE_H))/2;
+ let previous=[];
  for(let l=0;l<5;l++){
   const wanted=Math.min(targets[l]||0,cells.length);if(!wanted)continue;
+  const dx=(l%2)*LAYER_DX,dy=-l*LAYER_DY;
+  const candidates=cells.map(({r,c})=>({r,c,x:baseX+c*STEP_X+dx,y:baseY+r*STEP_Y+dy}));
+  let chosen=[];
   if(l===0){
-   const ranked=[...cells].sort((a,b)=>((a.c-2.5)**2+(a.r-4.5)**2)-((b.c-2.5)**2+(b.r-4.5)**2));
-   const chosen=wanted===cells.length?cells:ranked.slice(0,wanted);
-   chosen.sort((a,b)=>a.r-b.r||a.c-b.c).forEach(({r,c})=>out.push({x:baseX+c*STEP_X,y:baseY+r*STEP_Y,l}));
-   continue;
+   const ranked=[...candidates].sort((a,b)=>((a.c-2.5)**2+(a.r-4.5)**2)-((b.c-2.5)**2+(b.r-4.5)**2));
+   chosen=wanted===cells.length?candidates:ranked.slice(0,wanted);
+  }else{
+   const ranked=candidates.map(p=>{let overlaps=0;for(const q of previous)if(rectOverlap(p,q))overlaps++;const center=(p.c-2.5)**2+(p.r-4.5)**2;return{...p,overlaps,center}}).sort((a,b)=>b.overlaps-a.overlaps||a.center-b.center);
+   chosen=ranked.slice(0,wanted);
   }
-  const sx=(l%2)*STEP_X/2;
-  const compactY=STEP_Y*0.58;
-  const candidates=cells.map(({r,c})=>({r,c,x:baseX+c*STEP_X+sx,y:baseY+4.5*STEP_Y+(r-4.5)*compactY+l*7}));
-  const ranked=candidates.sort((a,b)=>((a.c-2.5)**2+(a.r-4.5)**2)-((b.c-2.5)**2+(b.r-4.5)**2));
-  const chosen=ranked.slice(0,wanted);
-  chosen.sort((a,b)=>a.y-b.y||a.x-b.x).forEach(p=>out.push({x:p.x,y:p.y,l}));
+  chosen.sort((a,b)=>a.r-b.r||a.c-b.c);
+  previous=chosen.map((p,i)=>({x:p.x,y:p.y,l,id:i}));
+  for(const p of chosen)out.push({x:p.x,y:p.y,l});
  }
  return out.map((p,i)=>({...p,id:i}));
 }
@@ -43,7 +45,7 @@ function symbolKind(s){const i=symbols.indexOf(s);return i<0?'unknown':`kind-${i
 function newGame(level){clearInterval(timer);closeDeadlock();closeLose();game={level,tiles:buildSolvable(level),selected:null,score:0,moves:0,pairs:0,combo:0,bestCombo:0,undo:[],shuffles:0};startedAt=Date.now();$('map').classList.add('hidden');$('game').classList.remove('hidden');$('islandTitle').textContent=names[level]||`Île ${level}`;$('difficulty').textContent=difficulties[level]||'Légendaire';$('msg').textContent='';render();timer=setInterval(tick,500)}
 function tick(){if(!game)return;const sec=Math.floor((Date.now()-startedAt)/1000);$('time').textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`}
 function updateTargets(){if(!game)return;const g=goals[game.level]||5000;if($('goal1'))$('goal1').textContent=Math.round(g*.3);if($('goal2'))$('goal2').textContent=Math.round(g*.6);if($('goal3'))$('goal3').textContent=g;if($('goalBar'))$('goalBar').style.width=Math.min(100,(game.score/g)*100)+'%'}
-function render(){const board=$('board');board.innerHTML='';board.style.width=boardBaseWidth()+'px';board.style.height=boardBaseHeight()+'px';board.dataset.shape=shapeName(game.level);board.dataset.level=game.level;board.setAttribute('aria-label',`Plateau ${shapeName(game.level)} — niveau ${game.level}`);for(const t of game.tiles){if(t.removed)continue;const free=freeTile(t,game.tiles),b=document.createElement('button');b.className='tile '+(free?'free':'blocked')+' '+symbolKind(t.symbol)+(game.selected===t.id?' selected':'');b.textContent=t.symbol;b.style.left=t.x+'px';b.style.top=t.y+'px';b.style.zIndex=20+t.l;b.dataset.layer=t.l;b.dataset.tileId=t.id;b.onclick=()=>pick(t.id);board.appendChild(b)}$('score').textContent=game.score;$('remaining').textContent=game.tiles.filter(t=>!t.removed).length;$('moves').textContent=game.moves;$('pairs').textContent=game.pairs;if($('tray')){$('tray').innerHTML='';$('tray').style.display='none';if($('tray').parentElement)$('tray').parentElement.style.display='none'}updateTargets();updateBoosters()}
+function render(){const board=$('board');board.innerHTML='';board.style.width=boardBaseWidth()+'px';board.style.height=boardBaseHeight()+'px';board.dataset.shape=shapeName(game.level);board.dataset.level=game.level;board.setAttribute('aria-label',`Plateau ${shapeName(game.level)} — niveau ${game.level}`);for(const t of game.tiles){if(t.removed)continue;const free=freeTile(t,game.tiles),b=document.createElement('button');b.className='tile '+(free?'free':'blocked')+' '+symbolKind(t.symbol)+(game.selected===t.id?' selected':'');b.textContent=t.symbol;b.style.left=t.x+'px';b.style.top=t.y+'px';b.style.width=TILE_W+'px';b.style.height=TILE_H+'px';b.style.zIndex=20+t.l;b.dataset.layer=t.l;b.dataset.tileId=t.id;b.onclick=()=>pick(t.id);board.appendChild(b)}$('score').textContent=game.score;$('remaining').textContent=game.tiles.filter(t=>!t.removed).length;$('moves').textContent=game.moves;$('pairs').textContent=game.pairs;if($('tray')){$('tray').innerHTML='';$('tray').style.display='none';if($('tray').parentElement)$('tray').parentElement.style.display='none'}updateTargets();updateBoosters()}
 function boardBaseWidth(){return 6*STEP_X+TILE_W+18}
 function boardBaseHeight(){return 10*STEP_Y+TILE_H+18}
 function legalPairs(){const free=game.tiles.filter(t=>!t.removed&&freeTile(t,game.tiles)),out=[];for(let i=0;i<free.length;i++)for(let j=i+1;j<free.length;j++)if(free[i].symbol===free[j].symbol)out.push([free[i],free[j]]);return out}
